@@ -17,7 +17,7 @@ export default function SideBar() {
     <aside
       className={`h-full w-80 ${
         white ? "bg-[#f3f3f3]" : "bg-[#FFF09C]"
-      } text-[#9379C2]  font-bold  ${
+      } text-violet-300  font-bold  ${
         settings ? "grid gap-4 text-start p-4" : "ps-2"
       } `}>
       {settings ? (
