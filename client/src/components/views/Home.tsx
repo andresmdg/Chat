@@ -1,4 +1,4 @@
-import SideBar from "../SideBar";
+import SideBar from "../sideBar/SideBar";
 
 export default function HomeView() {
   return (
