@@ -1,9 +1,8 @@
 import { Dispatch, SetStateAction, useState } from "react";
 import { handleActive, handleChange, messages } from "../../utils/utils";
-import { FaHamburger } from "react-icons/fa";
-import { LuSettings2 } from "react-icons/lu";
 import { Input } from "../Login";
 import ChatCard from "../ChatCard";
+import { GiHamburgerMenu } from "react-icons/gi";
 
 export default function Chats({
   setting,
@@ -22,12 +21,12 @@ export default function Chats({
           className={`${
             setting ? "hidden" : "h-fit w-fit bg-white"
           } transition-all `}>
-          <FaHamburger />
+          <GiHamburgerMenu />
         </button>
       </div>
       <section className='flex w-full h-fit'>
-        <LuSettings2 className='w-10 h-10' />
         <Input
+          add='mr-2'
           tipe='text'
           placeholder='Search'
           valueText={search}
@@ -37,12 +36,13 @@ export default function Chats({
       <section className='h-full overflow-y-auto scroll_stile'>
         {/* Aqui se hara el mapeo */}
         {messages.map((msn) => {
+          const fecha = msn.date.split("-");
           return (
             <ChatCard
               image=''
               name={msn.name}
-              date={msn.date}
-              message='Hooli hooli'
+              date={`${fecha[0]}/${fecha[1]}/${fecha[2].slice(0, 2)}`}
+              message='Lorem ipsum dolor sit amet consectetur adipisicing elit. Excepturi saepe id eveniet minus, accusantium fuga neque earum nisi! Aliquid harum consectetur vel doloremque fugit dicta, magnam facere molestiae minus possimus.'
               msnAccount={msn.msnAccount}
             />
           );
