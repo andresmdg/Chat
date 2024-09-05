@@ -65,8 +65,8 @@ export default function Signup() {
             dis={password === rpassword ? false : true}
           />
           <div className='flex gap-1 justify-center w-full text-zinc-700 font-bold'>
-            <p>Dont have Account?</p>
-            <NavLink to='/login'>Signup</NavLink>
+            <p>You have Account?</p>
+            <NavLink to='/login'>Login</NavLink>
           </div>
         </div>
       </div>
