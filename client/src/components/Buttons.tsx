@@ -36,7 +36,7 @@ export function ButtonSetting(params: {
   return (
     <button
       onClick={params.onclick}
-      className=' cursor-pointer flex gap-2 w-full bg-inherit m-0 p-0 hover:bg-[#8989893d] hover:border-none hover:scale-110 hover:transition-all hover:duration-500'>
+      className=' cursor-pointer border-none flex gap-2 w-full bg-inherit m-0 p-0 hover:bg-[#8989893d] hover:scale-105 hover:transition-all hover:duration-300'>
       <img src={params.image} alt={params.texto} />
       <div className='grid gap-2 w-full text-start mt-auto'>
         <p>{params.texto}</p>
