@@ -15,7 +15,7 @@ export default function SideBar() {
 
   return (
     <aside
-      className={`h-full w-80 ${
+      className={`h-full max-h-screen ${
         white ? "bg-[#f3f3f3]" : "bg-[#FFF09C]"
       } text-violet-300  font-bold  ${
         settings ? "grid gap-4 text-start p-4" : "ps-2"
