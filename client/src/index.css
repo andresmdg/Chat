@@ -46,7 +46,7 @@ button {
   font-size: 1em;
   font-weight: 500;
   font-family: inherit;
-  background-color: #1a1a1a;
+  /* background-color: #1a1a1a; */
   cursor: pointer;
   transition: border-color 0.25s;
 }
@@ -75,4 +75,26 @@ button:focus-visible {
   padding: 0;
   margin: 0;
   background-image: url(./assets/background.png);
+}
+
+.sidebar_Row {
+  display: grid;
+
+  grid-template-rows: auto 1fr;
+  gap: 16px;
+}
+
+.sd_default {
+  display: grid;
+  grid-template-rows: auto auto 1fr;
+}
+
+.btn_cat {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+}
+
+.scroll_stile {
+  scrollbar-color: #bcf8cb #22222200;
+  scrollbar-width: thin;
 }
