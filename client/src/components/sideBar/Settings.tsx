@@ -48,7 +48,7 @@ export default function Settings({
         </div>
         <div
           className={`grid gap-4 p-2 h-fit rounded-lg ${
-            white ? "bg-[#ffffff]" : "bg-yellow-50"
+            white ? "bg-white" : "bg-yellow-50"
           }`}>
           <ButtonSetting
             texto='Change Account'
