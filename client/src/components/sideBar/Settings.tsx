@@ -26,8 +26,8 @@ export default function Settings({
       <button
         onClick={() => handleActive(settings, setSettings)}
         className={`h-12 w-6 rounded-s p-0 absolute top-20 left-80 ${
-          white ? "bg-[#ffffff]" : "bg-yellow-50"
-        }`}>
+            white ? "bg-[#ffffff]" : "bg-yellow-50"
+          }`}>
         <IoIosArrowBack />
       </button>
       <div className='grid sidebar_Button h-full content-between'>
