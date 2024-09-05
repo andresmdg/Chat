@@ -2,6 +2,7 @@ import { Dispatch, SetStateAction } from "react";
 import InfoAccount from "./InfoAccount";
 import { ButtonSetting, ButtonSettingNav } from "../Buttons";
 import { handleActive } from "../../utils/utils";
+import { IoIosArrowBack } from "react-icons/io";
 
 export default function Settings({
   settings,
@@ -22,32 +23,51 @@ export default function Settings({
         email='user@mail.com'
         userName='User'
       />
+      <button
+        onClick={() => handleActive(settings, setSettings)}
+        className={`h-12 w-6 rounded-s p-0 absolute top-20 left-80 ${
+          white ? "bg-[#ffffff]" : "bg-yellow-50"
+        }`}>
+        <IoIosArrowBack />
+      </button>
       <div className='grid sidebar_Button h-full content-between'>
-        <div
+        <section
           className={`grid gap-4 h-fit p-2 rounded-lg ${
             white ? "bg-[#ffffff]" : "bg-yellow-50"
           }`}>
           <ButtonSetting texto='Account' image='.\public\icons\Account.svg' />
-          <ButtonSetting
-            onclick={() => handleActive(settings, setSettings)}
-            texto='Messages'
-            image='.\public\icons\Message.svg'
-          />
+          <ButtonSetting texto='Messages' image='.\public\icons\Message.svg' />
           <ButtonSetting texto='Info' image='.\public\icons\Info.svg' />
-        </div>
-        <div className={`${white ? "bg-[#ffffff]" : "bg-yellow-50"}`}>
+        </section>
+
+        {/* Section themes */}
+        <section
+          className={`${
+            white ? "bg-[#ffffff]" : "bg-yellow-50"
+          } p-2 rounded-lg text-center`}>
           <p>Temas</p>
-          <button
-            onClick={() => {
-              handleActive(white, setWhite);
-              window.localStorage.setItem("white", String(white));
-            }}
-            className='p-2'>
-            <div className='rounded-full h-6 w-6 bg-white border border-black'></div>
-          </button>
-        </div>
-        <div
-          className={`grid gap-4 p-2 h-fit rounded-lg ${
+          <div className='flex gap-2'>
+            <button
+              onClick={() => {
+                handleActive(white, setWhite);
+                window.localStorage.setItem("theme", "white");
+              }}
+              className='p-2'>
+              <div className='rounded-full h-6 w-6 bg-white border border-black' />
+            </button>
+            <button
+              onClick={() => {
+                handleActive(white, setWhite);
+                window.localStorage.setItem("theme", "white");
+              }}
+              className='p-2'>
+              <div className='rounded-full h-6 w-6 bg-white border border-black' />
+            </button>
+          </div>
+        </section>
+
+        <section
+          className={`grid gap-4 p-2 rounded-lg ${
             white ? "bg-[#ffffff]" : "bg-yellow-50"
           }`}>
           <ButtonSetting
@@ -59,7 +79,7 @@ export default function Settings({
             texto='Logout'
             image='.\public\icons\Exit.svg'
           />
-        </div>
+        </section>
       </div>
     </div>
   );
