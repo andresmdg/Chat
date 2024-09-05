@@ -19,12 +19,14 @@ export default function ChatCard({
         className='rounded-full h-11 w-11 border border-green-500 my-auto bg-fixed'
       />
       <div className='grid w-full'>
-        <div className='flex w-full content-between h-full'>
+        <div className='flex justify-between w-full'>
           <h5 className='text-violet-500 p-0 h-fit'>{name}</h5>
           <p>{date}</p>
         </div>
-        <div className='flex gap-2'>
-          <p className='text-green-600 content-between p-0 h-6 overflow-hidden'>{message}</p>
+        <div className='flex gap-2 justify-between text-start w-full'>
+          <p className='text-green-600 content-between p-0 h-6 overflow-hidden'>
+            {message}
+          </p>
           <p className='px-2 bg-red-400 rounded-full text-white'>
             {Number(msnAccount) <= 99 ? msnAccount : "99+"}
           </p>
