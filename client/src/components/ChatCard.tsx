@@ -12,15 +12,15 @@ export default function ChatCard({
   image: string;
 }) {
   return (
-    <div className='bg-slate-700 flex gap-2 p-2'>
+    <button className=' bg-inherit btn_cat hover:bg-[#8989893d] flex gap-2 p-2 w-full'>
       <img
         src={`${image}`}
         alt='icon'
         className='rounded-full h-11 w-11 border border-green-500 my-auto bg-fixed'
       />
-      <div className='grid justify-items-start gap-2 w-full'>
-        <h5 className='text-violet-500'>{name}</h5>
-        <p className='text-green-600'>{message}</p>
+      <div className='grid justify-items-start items-end w-full h-full'>
+        <h5 className='text-violet-500 p-0 h-fit'>{name}</h5>
+        <p className='text-green-600 p-0 h-fit'>{message}</p>
       </div>
       <div className='grid justify-items-end gap-2'>
         <p>{date}</p>
@@ -28,6 +28,6 @@ export default function ChatCard({
           {Number(msnAccount) <= 99 ? msnAccount : "99+"}
         </p>
       </div>
-    </div>
+    </button>
   );
 }
