@@ -31,13 +31,12 @@ export default function Chats({ setting, setChats }: ChatI) {
     return messages
       .filter((msn) => msn.name.toLowerCase().includes(search.toLowerCase()))
       .map((msn) => {
-        const fecha = msn.date.split("-");
         return (
           <ChatCard
             key={msn.msnAccount}
             image=''
             name={msn.name}
-            date={`${fecha[0]}/${fecha[1]}/${fecha[2].slice(0, 2)}`}
+            date={msn.date}
             message='Lorem ipsum dolor sit amet consectetur adipisicing elit. Excepturi saepe id eveniet minus, accusantium fuga neque earum nisi! Aliquid harum consectetur vel doloremque fugit dicta, magnam facere molestiae minus possimus.'
             msnAccount={msn.msnAccount}
           />
@@ -90,13 +89,12 @@ function PrivateChat() {
   return (
     <>
       {messages.map((msn) => {
-        const fecha = msn.date.split("-");
         return (
           <ChatCard
             key={msn.msnAccount}
             image=''
             name={msn.name}
-            date={`${fecha[0]}/${fecha[1]}/${fecha[2].slice(0, 2)}`}
+            date={msn.date}
             message='Lorem ipsum dolor sit amet consectetur adipisicing elit. Excepturi saepe id eveniet minus, accusantium fuga neque earum nisi! Aliquid harum consectetur vel doloremque fugit dicta, magnam facere molestiae minus possimus.'
             msnAccount={msn.msnAccount}
           />

@@ -1,3 +1,5 @@
+import formatTime from "../../utils/date";
+
 export default function ChatCard({
   name,
   message,
@@ -11,6 +13,9 @@ export default function ChatCard({
   date: string;
   image: string;
 }) {
+
+  const timeFormated = formatTime(new Date(date));
+
   return (
     <button className=' bg-inherit btn_cat hover:bg-[#8989893d] flex gap-2 p-2 w-full'>
       <img
@@ -21,7 +26,7 @@ export default function ChatCard({
       <div className='grid w-full'>
         <div className='flex justify-between w-full'>
           <h5 className='text-violet-500 p-0 h-fit'>{name}</h5>
-          <p>{date}</p>
+          <p>{timeFormated}</p>
         </div>
         <div className='flex gap-2 justify-between text-start w-full'>
           <p className='text-green-600 content-between p-0 h-6 overflow-hidden'>
