@@ -4,6 +4,7 @@ import { Input } from "../Login";
 import ChatCard from "./ChatCard";
 import { GiHamburgerMenu } from "react-icons/gi";
 import TapBar from "./Tapbar";
+import { Route, Routes } from "react-router-dom";
 
 interface ChatI {
   setting: boolean;
@@ -14,18 +15,18 @@ export default function Chats({ setting, setChats }: ChatI) {
   const [search, setsearch] = useState("");
   const [tap, setTap] = useState("group");
 
-  function renderChats() {
-    switch (tap) {
-      case "group":
-        return <GroupChat />;
-      case "private":
-        return <PrivateChat />;
-      case "people":
-        return <People />;
-      default:
-        return null;
-    }
-  }
+  // function renderChats() {
+  //   switch (tap) {
+  //     case "group":
+  //       return <GroupChat />;
+  //     case "private":
+  //       return <PrivateChat />;
+  //     case "people":
+  //       return <People />;
+  //     default:
+  //       return null;
+  //   }
+  // }
 
   function renderSearchResults() {
     return messages
@@ -77,7 +78,11 @@ export default function Chats({ setting, setChats }: ChatI) {
           </section>
 
           <section className='h-full overflow-y-auto scroll_stile'>
-            {renderChats()}
+            <Routes>
+              <Route path="/group" element={<GroupChat />}/>
+              <Route path="/private" element={<PrivateChat />} />
+              <Route path="/people" element={<People />} />
+            </Routes>
           </section>
         </>
       )}
