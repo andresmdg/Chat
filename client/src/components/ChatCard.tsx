@@ -1,3 +1,5 @@
+import formatTime from "../utils/date";
+
 export default function ChatCard({
   name,
   message,
@@ -23,7 +25,7 @@ export default function ChatCard({
         <p className='text-green-600 p-0 h-fit'>{message}</p>
       </div>
       <div className='grid justify-items-end gap-2'>
-        <p>{date}</p>
+        <p>{formatTime(new Date(date))}</p>
         <p className='px-2 bg-red-400 rounded-full text-white'>
           {Number(msnAccount) <= 99 ? msnAccount : "99+"}
         </p>
