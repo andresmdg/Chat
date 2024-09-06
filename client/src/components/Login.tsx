@@ -26,12 +26,14 @@ export default function Login() {
     <form>
       <div className='grid p-6 gap-11 w-96 rounded-2xl bg-[#FFCB71] '>
         <Input
+          add=''
           tipe='email'
           placeholder='User / Email'
           valueText={inputValue}
           onChange={handleChange}
         />
         <Input
+          add=''
           tipe='password'
           placeholder='Password'
           valueText={password}
@@ -60,16 +62,23 @@ interface InputProps {
   valueText: string;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   tipe: string;
+  add: string; // puedes agregar estilos en el componente aparte
 }
 
-export function Input({ placeholder, valueText, onChange, tipe }: InputProps) {
+export function Input({
+  placeholder,
+  valueText,
+  onChange,
+  tipe,
+  add,
+}: InputProps) {
   return (
     <input
       type={tipe}
       value={valueText}
       onChange={onChange}
       placeholder={placeholder}
-      className='px-2 py-1 rounded-lg text-center  bg-slate-50 text-blue-300 focus:border-none focus:text-blue-600'
+      className={`${add} px-2 py-1 w-full rounded-lg text-center  bg-slate-50 text-blue-300 focus:border-none focus:text-blue-600`}
     />
   );
 }

@@ -29,7 +29,7 @@ export default function InfoAccount(params: {
         </div>
       </div>
       <div className=' h-6 justify-center items-center gap-4 inline-flex hover:bg-[#8080804f] w-full py-1 rounded-lg group'>
-        <div className='w-5 h-5 bg-green-500 rounded-full animate-ping' />
+        <div className='w-2 h-2 bg-green-500 rounded-full animate-ping' />
         <p className="w-20 h-4 text-slate-400 text-base font-bold font-['Roboto']">
           En linea
         </p>
