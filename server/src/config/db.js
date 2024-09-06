@@ -1,20 +1,27 @@
-import sqlite3 from 'sqlite3';
+// Modules
 import path from 'path';
-import { fileURLToPath } from 'url';
+import sqlite3 from 'sqlite3';
 
-// Obtener __dirname en ESM
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+// Variables
+const { DB_DIR } = process.env;
 
-const databaseDir = process.env.DATABASEDIR || path.join(__dirname, '../../db.sqlite');
-const databasePath = path.resolve(databaseDir);
+// db connection
+async function db(basedir) {
+  const databaseDir = DB_DIR || path.join(basedir, 'db/db.sqlite');
+  const databasePath = path.resolve(databaseDir);
 
-const db = new sqlite3.Database(databasePath, (err) => {
-  if (err) {
-    console.error('Error opening database', err);
-  } else {
-    console.log('Database opened');
-  }
-});
+  return new Promise((resolve, reject) => {
+    const database = new sqlite3.Database(databasePath, (error) => {
+      if (error) {
+        console.error('[DB] Connection failed: ', error.message);
+        reject(error);
+      } else {
+        console.log('[DB] Successful connection.');
+        resolve(database);
+      }
+    });
+  });
+
+}
 
 export default db;

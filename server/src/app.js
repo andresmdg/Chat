@@ -1,29 +1,39 @@
+// Modules
 import 'dotenv/config';
-import express from 'express';
-import cors from 'cors';
-import routerApi from './routes/index.js';
-import passport from './controllers/auth.js';
 
-const app = express();
-const port = process.env.PORT || 3000;
-app.use(express.json());
-app.use(passport.initialize());
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+import { createServer } from 'node:http';
 
-const whitelist = ['http://localhost:3000', 'http://127.0.0.1:5500', 'http://localhost:5173'];
-const options = {
-    origin: (origin, callback) => {
-        if (whitelist.includes(origin) || !origin) {
-            callback(null, true);
-        } else {
-            callback(new Error('Not allowed by CORS'));
-        }
-    },
-};
+// Imports
+import db from './config/db.js';
+import app from './config/server.js';
+import loadRouters from './utils/loadrouter.js'
 
-app.use(cors(options));
+// Variables
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
-routerApi(app);
+const { PORT } = process.env;
+const server = createServer(app);
+const basedir = path.join(__dirname, 'routes');
 
-app.listen(port, () => {
-    console.log(`Server running on port: ${port}`);
-});
+
+(async () => {
+    try {
+
+        // DB connection
+        await db(__dirname);
+        // loading routers
+        await loadRouters(app, basedir);
+
+        // Running server
+        const listener = server.listen(PORT, () => console.log(`[SR] listening on port: ${listener.address().port}`))
+
+    } catch (error) {
+        console.log(`[SR] An error was occured: ${error.message}`);
+        setTimeout(() => {
+            process.exit(1);
+        }, 1000);
+    }
+})();
