@@ -40,7 +40,7 @@ export function ButtonSetting(params: {
       <img src={params.image} alt={params.texto} />
       <div className='grid gap-2 w-full text-start mt-auto'>
         <p>{params.texto}</p>
-        <hr className='group-hover:w-0' />
+        <hr className='group-hover:opacity-0' />
       </div>
     </button>
   );
