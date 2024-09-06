@@ -15,14 +15,14 @@ export default function Settings({
   setWhite: Dispatch<SetStateAction<boolean>>;
 }) {
   return (
-    <div className='grid sidebar_Row'>
+    <div className='grid sidebar_Row w-96 gap-4 text-start p-4'>
       <InfoAccount
         white={white}
         name='Name'
         email='user@mail.com'
         userName='User'
       />
-      <div className='grid sidebar_Button h-full content-between'>
+      <div className='grid sidebar_Button h-full content-between gap-4'>
         <div
           className={`grid gap-4 h-fit p-2 rounded-lg ${
             white ? "bg-[#ffffff]" : "bg-yellow-50"
