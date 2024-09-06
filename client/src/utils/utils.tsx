@@ -1,3 +1,5 @@
+import { Dispatch, SetStateAction } from "react";
+
 export const handleChange = (
   e: React.ChangeEvent<HTMLInputElement>,
   setter: (value: string) => void
@@ -8,6 +10,13 @@ export const handleChange = (
 
 export function handleActive(value: boolean, setter: (value: boolean) => void) {
   setter(!value);
+}
+
+export function handleChangeValue(
+  value: string,
+  setter: Dispatch<SetStateAction<string>>
+) {
+  setter(value);
 }
 
 export const messages = [
