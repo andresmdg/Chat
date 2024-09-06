@@ -14,7 +14,7 @@ export default function Chats({
 }) {
   const [search, setsearch] = useState("");
   return (
-    <div className='h-full grid gap-2 sd_default'>
+    <div className='h-full grid gap-2 sd_default w-96'>
       <div className='flex justify-between h-fit m-2'>
         <p className='text-3xl'>Chats</p>
         <button
