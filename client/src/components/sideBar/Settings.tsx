@@ -26,8 +26,8 @@ export default function Settings({
       <button
         onClick={() => handleActive(settings, setSettings)}
         className={`h-12 w-6 rounded-s p-0 absolute top-20 left-80 ${
-            white ? "bg-[#ffffff]" : "bg-yellow-50"
-          }`}>
+          white ? "bg-[#ffffff]" : "bg-yellow-50"
+        }`}>
         <IoIosArrowBack />
       </button>
       <div className='grid sidebar_Button h-full content-between'>
@@ -35,12 +35,24 @@ export default function Settings({
           className={`grid gap-4 h-fit p-2 rounded-lg ${
             white ? "bg-[#ffffff]" : "bg-yellow-50"
           }`}>
-          <ButtonSetting texto='Account' image='.\public\icons\Account.svg' />
-          <ButtonSetting texto='Messages' image='.\public\icons\Message.svg' />
-          <ButtonSetting texto='Info' image='.\public\icons\Info.svg' />
+          <ButtonSetting
+            onclick={() => console.log("")}
+            texto='Account'
+            image='.\public\icons\Account.svg'
+          />
+          <ButtonSetting
+            onclick={() => console.log("")}
+            texto='Messages'
+            image='.\public\icons\Message.svg'
+          />
+          <ButtonSetting
+            onclick={() => console.log("")}
+            texto='Info'
+            image='.\public\icons\Info.svg'
+          />
         </section>
+        {/*  Section themes */}
 
-        {/* Section themes */}
         <section
           className={`${
             white ? "bg-[#ffffff]" : "bg-yellow-50"
@@ -55,22 +67,14 @@ export default function Settings({
               className='p-2'>
               <div className='rounded-full h-6 w-6 bg-white border border-black' />
             </button>
-            <button
-              onClick={() => {
-                handleActive(white, setWhite);
-                window.localStorage.setItem("theme", "white");
-              }}
-              className='p-2'>
-              <div className='rounded-full h-6 w-6 bg-white border border-black' />
-            </button>
           </div>
         </section>
-
         <section
-          className={`grid gap-4 p-2 rounded-lg ${
-            white ? "bg-[#ffffff]" : "bg-yellow-50"
+          className={`grid gap-4 p-2 h-fit rounded-lg ${
+            white ? "bg-white" : "bg-yellow-50"
           }`}>
           <ButtonSetting
+            onclick={() => console.log("")}
             texto='Change Account'
             image='.\public\icons\Change.svg'
           />
