@@ -1,17 +1,11 @@
 import Settings from "./Settings";
 import Chats from "./Chats";
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import { useTheme } from "../hooks/useTheme";
 
 export default function SideBar() {
+  const {white} = useTheme()
   const [settings, setSettings] = useState(false);
-  const [white, setWhite] = useState(false);
-
-  useEffect(() => {
-    const themeWhite = window.localStorage.getItem("white");
-    if (themeWhite === "true") {
-      setWhite(true);
-    }
-  }, [white]);
 
   return (
     <aside
@@ -22,8 +16,6 @@ export default function SideBar() {
         <Settings
           settings={settings}
           setSettings={setSettings}
-          white={white}
-          setWhite={setWhite}
         />
       ) : (
         <Chats setting={settings} setChats={setSettings} />
