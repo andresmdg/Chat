@@ -2,7 +2,8 @@ import { Dispatch, SetStateAction } from "react";
 import { FaPeopleArrows } from "react-icons/fa";
 import { FaPeopleGroup } from "react-icons/fa6";
 import { GoPeople } from "react-icons/go";
-import { handleChangeValue } from "../../utils/utils";
+// import { handleChangeValue } from "../../utils/utils";
+import { Link, useLocation } from "react-router-dom";
 
 interface Btn {
   name: string;
@@ -13,17 +14,17 @@ interface Btn {
 const buttons: Btn[] = [
   {
     name: "Group",
-    root: "group",
+    root: "/group",
     icon: <FaPeopleGroup />,
   },
   {
     name: "Private",
-    root: "private",
+    root: "/private",
     icon: <FaPeopleArrows />,
   },
   {
     name: "People",
-    root: "people",
+    root: "/people",
     icon: <GoPeople />,
   },
 ];
@@ -60,16 +61,18 @@ interface ButtonTapbarProps extends Btn {
   setTap: Dispatch<SetStateAction<string>>;
 }
 
-function ButtonTapbar({ taps, setTap, name, root, icon }: ButtonTapbarProps) {
+function ButtonTapbar({ taps, name, root, icon }: ButtonTapbarProps) {
+  const { pathname } = useLocation();
   return (
-    <button
-      onClick={() => handleChangeValue(root, setTap)}
+    <Link
+    // onClick={() => handleChangeValue(root, setTap)}
+      to={root}
       className={`${
-        (taps === root) ? "bg-yellow-50 " : "bg-none"
+        (pathname === root) ? "bg-yellow-50 " : "bg-none"
       } w-full grid justify-items-center py-1
       ${taps ? "hover:bg-white" : "hover:bg-yellow-50"} `}>
       {icon}
       <span>{name}</span>
-    </button>
+    </Link>
   );
 }

@@ -6,7 +6,7 @@ export default function InfoAccount(params: {
 }) {
   return (
     <div
-      className={`w-72 sidebar_Info h-fit flex-col justify-start items-center gap-6 inline-flex p-2 rounded-lg ${
+      className={`w-auto sidebar_Info h-fit flex-col justify-start items-center gap-6 inline-flex p-2 rounded-lg ${
         params.white ? "bg-[#ffffff]" : "bg-yellow-50"
       }`}>
       <div className='self-stretch justify-start items-end gap-1 inline-flex'>
@@ -33,7 +33,7 @@ export default function InfoAccount(params: {
         <p className="w-20 h-4 text-slate-400 text-base font-bold font-['Roboto']">
           En linea
         </p>
-        <div className='bg-[#FFF09C] w-11 h-11 absolute left-80 top-36 hidden group-hover:grid'></div>
+        <div className='bg-[#FFF09C] w-11 h-11 absolute left-[103%] hidden group-hover:grid'></div>
       </div>
     </div>
   );

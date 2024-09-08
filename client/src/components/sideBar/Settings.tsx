@@ -3,20 +3,19 @@ import InfoAccount from "./InfoAccount";
 import { ButtonSetting, ButtonSettingNav } from "../Buttons";
 import { handleActive } from "../../utils/utils";
 import { IoIosArrowBack } from "react-icons/io";
+import { useTheme } from "../hooks/useTheme";
 
 export default function Settings({
   settings,
   setSettings,
-  white,
-  setWhite,
 }: {
   settings: boolean;
   setSettings: Dispatch<SetStateAction<boolean>>;
-  white: boolean;
-  setWhite: Dispatch<SetStateAction<boolean>>;
 }) {
+  const {white, changeTheme} = useTheme();
+
   return (
-    <div className='grid sidebar_Row'>
+    <div className='grid sidebar_Row w-96 gap-4 text-start p-4'>
       <InfoAccount
         white={white}
         name='Name'
@@ -30,7 +29,7 @@ export default function Settings({
         }`}>
         <IoIosArrowBack />
       </button>
-      <div className='grid sidebar_Button h-full content-between'>
+      <div className='grid sidebar_Button h-full content-between gap-4'>
         <section
           className={`grid gap-4 h-fit p-2 rounded-lg ${
             white ? "bg-[#ffffff]" : "bg-yellow-50"
@@ -60,10 +59,7 @@ export default function Settings({
           <p>Temas</p>
           <div className='flex gap-2'>
             <button
-              onClick={() => {
-                handleActive(white, setWhite);
-                window.localStorage.setItem("theme", "white");
-              }}
+              onClick={changeTheme}
               className='p-2'>
               <div className='rounded-full h-6 w-6 bg-white border border-black' />
             </button>
