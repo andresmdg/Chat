@@ -1,9 +1,10 @@
 import db from "../../config/db.js";
+const database = await db();
 
 const register = (name, email, password) => {
     const query = "INSERT INTO users (name, email, password) VALUES (?, ?, ?)";
     return new Promise((resolve, reject) => {
-        db.run(query, [name, email, password], function(err) {
+        database.run(query, [name, email, password], function(err) {
             if (err) {
                 return reject(err);
             }
