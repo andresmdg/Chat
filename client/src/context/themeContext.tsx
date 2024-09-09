@@ -19,7 +19,7 @@ export const ThemeContextProvider = ({ children }: {children: React.ReactNode}) 
 
   const changeTheme = () => {
     setWhite(!white);
-    LocalStorage.setItem("white", white)
+    LocalStorage.setItem("white", !white)
   }
 
   useEffect(() => {
