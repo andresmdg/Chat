@@ -2,14 +2,24 @@
   "name": "server",
   "version": "1.0.0",
   "type": "module",
-  "main": "index.js",
+  "imports": {
+    "#root": "./src/root.js",
+    "#db": "./src/config/db.js",
+    "#utils": "./src/utils/index.js",
+    "#app": "./src/config/server.js",
+    "#models": "./src/models/index.js",
+    "#controllers": "./src/controllers/index.js",
+    "#middlewares": "./src/middlewares/index.js"
+  },
+  "main": "./src/app.js",
   "scripts": {
     "dev": "nodemon src/app.js",
-    "start": "node src/app.js"
+    "start": "node src/app.js",
+    "init-db": "node src/utils/initdb.js"
   },
   "keywords": [],
   "author": "",
-  "license": "ISC",
+  "license": "MIT",
   "description": "",
   "dependencies": {
     "bcryptjs": "^2.4.3",

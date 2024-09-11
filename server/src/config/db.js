@@ -3,13 +3,12 @@ import path from "path";
 import sqlite3 from "sqlite3";
 import fs from "node:fs/promises";
 
+// Imports
+import { __dirname } from "#root";
+
 // Variables
-let db;
 let db_instance = null;
 const { DB_DIR } = process.env;
-
-if (db_instance) db = db_instance;
-else db = connection;
 
 // db dir exists
 async function dirExists(dir) {
@@ -29,10 +28,12 @@ async function dirExists(dir) {
 }
 
 // db connection
-async function connection(basedir) {
+async function db() {
+  if (db_instance) return db_instance;
   console.log("[DB] Making connection");
 
-  const databaseDir = path.join(basedir, DB_DIR) || path.join(basedir, "db");
+  const databaseDir =
+    path.join(__dirname, DB_DIR) || path.join(__dirname, "db");
   const databaseFile = path.join(databaseDir, "db.sqlite");
 
   const databasePath = path.resolve(databaseFile);
