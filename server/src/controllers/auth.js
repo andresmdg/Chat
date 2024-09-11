@@ -2,7 +2,6 @@ import passport from 'passport';
 import { Strategy as LocalStrategy } from 'passport-local';
 import { Strategy as JwtStrategy, ExtractJwt } from 'passport-jwt';
 import bcrypt from 'bcryptjs';
-import jwt from 'jsonwebtoken';
 import getByEmail from '../models/user/getbyemail.js';
 import create from '../models/user/register.js';
 import getbyid from '../models/user/getbyid.js';

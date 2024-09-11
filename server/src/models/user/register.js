@@ -1,5 +1,4 @@
-import db from "../../config/db.js";
-const database = await db();
+import database from "../../config/db.js";
 
 const register = (name, email, password) => {
     const query = "INSERT INTO users (name, email, password) VALUES (?, ?, ?)";

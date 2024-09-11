@@ -1,5 +1,4 @@
-import db from "../../config/db.js";
-const database = await db();
+import database from "../../config/db.js";
 
 const getByEmail = (email) => {
     const query = "SELECT * FROM users WHERE email = ?";
