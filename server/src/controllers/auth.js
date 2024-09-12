@@ -25,9 +25,10 @@ passport.use(
         if (user) {
           return done(null, false, { message: "Email already taken" });
         }
+        const avatarUrl = req.file ? `/uploads/avatars/${req.file.filename}` : null;
         const hashedPassword = bcrypt.hashSync(password, 10);
         const { name } = req.body;
-        const newUser = await usersModel.add(name, email, hashedPassword);
+        const newUser = await usersModel.add(name, email, hashedPassword, avatarUrl);
         return done(null, newUser);
       } catch (error) {
         return done(error);

@@ -3,6 +3,7 @@ import cors from "cors";
 import helmet from "helmet";
 import morgan from "morgan";
 import express from "express";
+import path from 'path';
 
 // Imports
 
@@ -27,5 +28,6 @@ app.use(helmet());
 app.use(morgan("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+app.use('/uploads', express.static(path.join(process.cwd(), 'uploads')));
 
 export default app;
