@@ -17,6 +17,7 @@ async function initDatabase(db) {
           name VARCHAR NOT NULL,
           email VARCHAR UNIQUE NOT NULL,
           password VARCHAR NOT NULL,
+          avatar	VARCHAR,
           created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         )
       `,

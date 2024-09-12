@@ -2,10 +2,10 @@ import db from "#db";
 
 const database = await db();
 
-async function add(name, email, password) {
-  const query = "INSERT INTO users (name, email, password) VALUES (?, ?, ?)";
+async function add(name, email, password, avatarUrl) {
+  const query = "INSERT INTO users (name, email, password, avatar) VALUES (?, ?, ?, ?)";
   return new Promise((resolve, reject) => {
-    database.run(query, [name, email, password], function (err) {
+    database.run(query, [name, email, password, avatarUrl], function (err) {
       if (err) {
         return reject(err);
       }

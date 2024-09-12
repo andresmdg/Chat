@@ -1,10 +1,23 @@
 import express from "express";
 import { auth } from "#controllers";
 import jwt from "jsonwebtoken";
+import multer from 'multer';
 
 const router = express.Router();
 
-router.post("/register", (req, res, next) => {
+// Configurar multer
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, 'uploads/avatars');
+  },
+  filename: (req, file, cb) => {
+    cb(null, `${Date.now()}-${file.originalname}`);
+  }
+});
+
+const upload = multer({ storage });
+
+router.post("/register", upload.single('avatar'), (req, res, next) => {
   auth.authenticate("register", (err, user, info) => {
     if (err) {
       return res.status(400).json({ success: false, message: err.message });
