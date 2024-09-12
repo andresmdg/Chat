@@ -8,7 +8,7 @@ dayjs.extend(updateLocale)
 dayjs.locale('es');
 
 export default function formatTime (date: Date) {
-  return dayjs().calendar(date, {
+  return dayjs(date).calendar(null, {
     sameDay: "h:mm A", // 2:30 AM
     lastDay: "[Ayer]", // Ayer
     lastWeek: "dddd", // martes
