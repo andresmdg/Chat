@@ -23,6 +23,10 @@ async function getByEmail(email) {
         return reject(err);
       }
 
+      if (!row) {
+        return resolve(null);
+      }
+
       const user = {
           ...row,
           avatarUrl: row.avatar ? `${process.env.BASE_URL}${row.avatar}` : null
@@ -53,6 +57,29 @@ async function getByID(id) {
 
 async function drop(id) {}
 
-async function update(id) {}
+async function update (id, params) { 
+  let query = "UPDATE users SET";
+  const queryParams = [];
+  const keys = Object.keys(params);
+
+  keys.forEach((key, index) => {
+      query += ` ${key} = ?`;
+      if(index < keys.length -1) {
+          query += ",";
+      }
+      queryParams.push(params[key]);
+  });
+  
+  query += " WHERE id = ?";
+  queryParams.push(id);    
+  return new Promise((resolve, reject) => {
+    database.run(query, queryParams, (err) => {
+          if (err) {
+              return reject(err);
+          }
+          return resolve(true);
+      });
+  });
+}
 
 export default { getByEmail, getByID, add, drop, update };
