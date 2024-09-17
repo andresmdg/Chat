@@ -5,6 +5,8 @@ import upload from "#multer";
 
 const router = express.Router();
 
+const { SCRT } = process.env;
+
 router.post("/register", upload.single('avatar'), (req, res, next) => {
   auth.authenticate("register", (err, user, info) => {
     if (err) {
@@ -25,7 +27,7 @@ router.post("/login", (req, res, next) => {
     if (!user) {
       return res.status(400).json({ success: false, message: info.message });
     }
-    const token = jwt.sign({ id: user.id }, "your_jwt_secret", {
+    const token = jwt.sign({ id: user.id }, SCRT, {
       expiresIn: "1h",
     });
     res.status(200).json({ success: true, token, message: info.message });

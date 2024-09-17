@@ -22,7 +22,13 @@ async function getByEmail(email) {
       if (err) {
         return reject(err);
       }
-      return resolve(row);
+
+      const user = {
+          ...row,
+          avatarUrl: row.avatar ? `${process.env.BASE_URL}${row.avatar}` : null
+      }
+      
+      return resolve(user);
     });
   });
 }
@@ -34,7 +40,13 @@ async function getByID(id) {
       if (err) {
         return reject(err);
       }
-      return resolve(row);
+      
+      const user = {
+        ...row,
+        avatarUrl: row.avatar ? `${process.env.BASE_URL}${row.avatar}` : null
+      }
+
+      return resolve(user);
     });
   });
 }
