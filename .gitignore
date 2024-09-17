@@ -131,4 +131,4 @@ dist
 
 db.sqlite
 
-uploads/avatars/*
+server/uploads/avatars/*
