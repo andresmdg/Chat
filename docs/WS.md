@@ -2,6 +2,84 @@
 
 Esta sección describe los eventos WebSocket disponibles para interactuar con la aplicación en tiempo real utilizando Socket.IO.
 
+## Autenticación
+
+Para autenticar la conexión WebSocket, el cliente debe enviar un token en el query string. Este token se usa para validar la sesión del usuario.
+
+### Cliente
+
+El cliente envía el token usando el query string de Socket.IO:
+
+```javascript
+import { useCallback, useEffect, useState } from "react";
+import io from "socket.io-client";
+
+export const useSocket = (eventName) => {
+  const [socket, setSocket] = useState(null);
+  const [online, setOnline] = useState(false);
+
+  const conectarSocket = useCallback(() => {
+    const token = localStorage.getItem("token");
+
+    const socketTemp = io.connect(eventName, {
+      transports: ["websocket"],
+      autoConnect: true,
+      forceNew: true,
+      query: {
+        "x-token": token,
+      },
+    });
+    setSocket(socketTemp);
+  }, [serverPath]);
+
+  const desconectarSocket = useCallback(() => {
+    socket?.disconnect();
+  }, [socket]);
+
+  useEffect(() => {
+    setOnline(socket?.connected);
+  }, [socket]);
+
+  useEffect(() => {
+    socket?.on("connect", () => setOnline(true));
+  }, [socket]);
+
+  useEffect(() => {
+    socket?.on("disconnect", () => setOnline(false));
+  }, [socket]);
+
+  return {
+    socket,
+    online,
+    conectarSocket,
+    desconectarSocket,
+  };
+};
+```
+
+### Servidor
+
+El servidor verifica el token en el query string durante la conexión:
+
+```javascript
+import Server from "socket.io";
+const io = new Server(server);
+
+io.on("connection", async (socket) => {
+  const token = socket.handshake.query["x-token"];
+  const [valido, uid] = comprobarJWT(token);
+
+  // Si el token no es de un usuario valido no establece una conexion
+  if (!valido) return socket.disconnect();
+  // Si es asi entonces actualiza la bd para mostrar que el usuario se ha conectado.
+  await usuarioOnline(uuid);
+
+  // Eventos de socket.io
+
+  // ....
+});
+```
+
 ## Eventos
 
 | Event            | Descripción                                        | Payload                                                                                                |
@@ -77,44 +155,6 @@ Esta sección describe los eventos WebSocket disponibles para interactuar con la
   ```javascript
   io.emit("message:delete", {
     id: "uuid",
-  });
-  ```
-
-### Conectar un usuario
-
-- **Cliente** se conecta y envía información sobre el usuario:
-
-  ```javascript
-  socket.emit("user:connected", {
-    user_id: "uuid",
-    username: "username",
-  });
-  ```
-
-- **Servidor** emite el evento `user:connected` a todos los clientes conectados:
-
-  ```javascript
-  io.emit("user:connected", {
-    user_id: "uuid",
-    username: "username",
-  });
-  ```
-
-### Desconectar un usuario
-
-- **Cliente** se desconecta y envía información sobre el usuario:
-
-  ```javascript
-  socket.emit("user:disconnected", {
-    user_id: "uuid",
-  });
-  ```
-
-- **Servidor** emite el evento `user:disconnected` a todos los clientes conectados:
-
-  ```javascript
-  io.emit("user:disconnected", {
-    user_id: "uuid",
   });
   ```
 
