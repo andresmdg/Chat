@@ -9,7 +9,7 @@ import { createServer } from "node:http";
 import db from "#db";
 import app from "#app";
 import { __dirname } from "#root";
-import { loadRouters } from "#utils";
+import { loadRouters, loadEvents } from "#utils";
 
 // Variables
 const { PORT } = process.env;
