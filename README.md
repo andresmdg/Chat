@@ -92,4 +92,4 @@ Este proyecto está licenciado bajo la Licencia MIT. Consulta el archivo [LICENS
 
 ---
 
-Este README proporciona una visión general del repositorio, cubre la estructura de carpetas, los pasos para la instalación y ejecución, y los detalles sobre cómo contribuir al proyecto.
+Este README proporciona una visión general del repositorio, cubre la estructura de carpetas, los pasos para la instalación y ejecución del proyecto.
