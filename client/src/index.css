@@ -17,16 +17,20 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-a {
+/* a {
   font-weight: 500;
   color: #646cff;
   text-decoration: inherit;
 }
 a:hover {
   color: #535bf2;
+} */
+* {
+  @apply transition-all duration-500 ease-in-out;
 }
 
 body {
+  width: fit-content;
   margin: 0;
   display: flex;
   place-items: center;
@@ -76,16 +80,13 @@ button:focus-visible {
 }
 
 .sidebar_Row {
-  display: grid;
-
   grid-template-rows: auto 1fr;
-  gap: 16px;
+  @apply grid gap-4;
 }
 
-.sidebar_Button{
-  display: grid;
+.sidebar_Button {
   grid-template-rows: auto 1fr auto;
-  gap: 8px;
+  @apply grid gap-2;
 }
 
 .sd_default {
@@ -101,4 +102,32 @@ button:focus-visible {
 .scroll_stile {
   scrollbar-color: #bcf8cb #22222200;
   scrollbar-width: thin;
+}
+
+.chatBox {
+  grid-template-rows: 1fr auto;
+  @apply grid;
+}
+
+.scrollbar-w-2::-webkit-scrollbar {
+  width: 0.25rem;
+  height: 0.25rem;
+}
+
+.scrollbar-track-blue-lighter::-webkit-scrollbar-track {
+  --bg-opacity: 1;
+  /* background-color: #f7fafc;
+  background-color: rgba(247, 250, 252, var(--bg-opacity)); */
+  scrollbar-color: #bcf8cb #22222200;
+  scrollbar-width: thin;
+}
+
+.scrollbar-thumb-blue::-webkit-scrollbar-thumb {
+  --bg-opacity: 1;
+  background-color: #edf2f7;
+  background-color: rgba(237, 242, 247, var(--bg-opacity));
+}
+
+.scrollbar-thumb-rounded::-webkit-scrollbar-thumb {
+  border-radius: 0.25rem;
 }

@@ -46,20 +46,30 @@ export default function Chats({ setting, setChats }: ChatI) {
   }
 
   return (
-    <div className='h-full grid gap-2 sd_default w-96'>
+    <div
+      className='h-full grid gap-2 sd_default 
+      max-md:w-screen
+      max-lg:w-64
+      max-2xl:w-80
+      w-96
+    
+    '>
       <div className='flex justify-between h-fit m-2'>
         <p className='text-3xl'>Chats</p>
+
+        {/* // * Menu button */}
         <button
           onClick={() => handleActive(setting, setChats)}
-          className={`${
-            setting ? "hidden" : "h-fit w-fit bg-white"
-          } transition-all `}>
+          className={`${setting ? "hidden" : "h-fit w-fit bg-white"}
+           `}>
           <GiHamburgerMenu />
         </button>
       </div>
-      <section className='flex w-full h-fit'>
+
+      {/* // * Search bar */}
+      <section className='flex w-full h-fit m-'>
         <Input
-          add='mr-2'
+          add='mx-4'
           tipe='text'
           placeholder='Search'
           valueText={search}
@@ -79,9 +89,9 @@ export default function Chats({ setting, setChats }: ChatI) {
 
           <section className='h-full overflow-y-auto scroll_stile'>
             <Routes>
-              <Route path="/group" element={<GroupChat />}/>
-              <Route path="/private" element={<PrivateChat />} />
-              <Route path="/people" element={<People />} />
+              <Route path='/group' element={<GroupChat />} />
+              <Route path='/private' element={<PrivateChat />} />
+              <Route path='/people' element={<People />} />
             </Routes>
           </section>
         </>
