@@ -6,7 +6,7 @@ export default function InfoAccount(params: {
 }) {
   return (
     <div
-      className={`w-auto sidebar_Info h-fit flex-col justify-start items-center gap-6 inline-flex p-2 rounded-lg ${
+      className={`w-full sidebar_Info h-fit flex-col justify-start items-center gap-6 inline-flex p-2 rounded-lg ${
         params.white ? "bg-[#ffffff]" : "bg-yellow-50"
       }`}>
       <div className='self-stretch justify-start items-end gap-1 inline-flex'>
