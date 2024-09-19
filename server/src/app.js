@@ -9,6 +9,7 @@ import { createServer } from "node:http";
 import db from "#db";
 import app from "#app";
 import { __dirname } from "#root";
+import { chatsModel } from "#models";
 import { loadRouters, loadEvents, verifyJWT } from "#utils";
 
 // Variables
@@ -36,15 +37,27 @@ const routesDir = path.join(__dirname, "routes");
     io.on("connection", async (socket) => {
       console.log("[IO] Connection with a user established");
 
-      // comprobar si el usuario es valido:
+      // Comprobar si el usuario es válido:
       const [valid, uuid] = await verifyJWT(socket.handshake.query["x-token"]);
-      console.log(valid);
       if (!valid) return socket.disconnect();
 
-      console.log("valido", uuid);
+      try {
+        // Obtener una lista de chat_ids en los que el usuario está involucrado
+        const chatIds = await chatsModel.getUserChats(uuid);
 
-      // Load socket events
-      await loadEvents(socket, io, eventsDir);
+        if (chatIds) {
+          // Unirse a cada sala de chat
+          chatIds.forEach((chatId) => {
+            socket.join(chatId);
+          });
+        }
+
+        // Load socket events
+        await loadEvents(socket, io, eventsDir);
+      } catch (error) {
+        console.error("[IO] Error joining chat rooms:", error);
+        socket.disconnect();
+      }
     });
   } catch (error) {
     console.log(`[SR] An error was occured: ${error.message}`);
