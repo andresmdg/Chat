@@ -9,4 +9,8 @@ export class LocalStorage {
     if (data) return JSON.parse(data);
     return null;
   }
+
+  static removeItem (key: string) {
+    window.localStorage.removeItem(key);
+  }
 }
