@@ -11,15 +11,12 @@ export default function SideBar() {
     <aside
       className={`h-full max-h-screen ${
         white ? "bg-[#f3f3f3]" : "bg-[#FFF09C]"
-      } text-violet-300  font-bold`}>
-      {settings ? (
-        <Settings
-          settings={settings}
-          setSettings={setSettings}
-        />
-      ) : (
-        <Chats setting={settings} setChats={setSettings} />
-      )}
+      } text-violet-300  font-bold relative`}>
+      <Settings
+        settings={settings}
+        setSettings={setSettings}
+      />
+      <Chats setting={settings} setChats={setSettings} />
     </aside>
   );
 }

@@ -1,11 +1,14 @@
 import { Link } from "react-router-dom";
 
-export function ButtonForm(params: { title: string; dis: boolean }) {
+type ButtonFormProps = React.ButtonHTMLAttributes<HTMLButtonElement>;
+
+export function ButtonForm({children, ...rest}: ButtonFormProps) {
   return (
     <button
-      disabled={params.dis}
-      className='bg-blue-400 hover:bg-blue-600 text-white font-bold py-2 px cursor-pointer disabled:bg-blue-100 disabled:text-blue-400'>
-      <h5>{params.title}</h5>
+      className='bg-blue-400 hover:bg-blue-600 text-white font-bold py-2 px cursor-pointer disabled:bg-blue-100 disabled:text-blue-400'
+      {...rest}
+    >
+      <h5>{children}</h5>
     </button>
   );
 }
