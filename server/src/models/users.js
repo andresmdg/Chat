@@ -1,9 +1,9 @@
 import { v4 as uuidv4 } from "uuid";
+
 import db from "#db";
 
-const database = await db();
-
 async function add(name, email, password, avatarUrl) {
+  const database = await db();
   const id = uuidv4();
   const query =
     "INSERT INTO users (id, name, email, password, avatar) VALUES (?, ?, ?, ?, ?)";
@@ -19,6 +19,7 @@ async function add(name, email, password, avatarUrl) {
 }
 
 async function getByEmail(email) {
+  const database = await db();
   const query = "SELECT * FROM users WHERE email = ?";
   return new Promise((resolve, reject) => {
     database.get(query, [email], (err, row) => {
@@ -41,6 +42,7 @@ async function getByEmail(email) {
 }
 
 async function getByUsername(username) {
+  const database = await db();
   const query = "SELECT * FROM users WHERE username = ?";
   return new Promise((resolve, reject) => {
     database.get(query, [username], (err, row) => {
@@ -63,6 +65,7 @@ async function getByUsername(username) {
 }
 
 async function getByID(id) {
+  const database = await db();
   const query = "SELECT * FROM users WHERE id = ?";
   return new Promise((resolve, reject) => {
     database.get(query, [id], (err, row) => {
@@ -85,6 +88,7 @@ async function getByID(id) {
 }
 
 async function drop(id) {
+  const database = await db();
   const user = await getByID(id);
   if (!user) return Promise.reject(new Error("Usuario no encontrado"));
 
@@ -100,6 +104,7 @@ async function drop(id) {
 }
 
 async function update(id, params) {
+  const database = await db();
   const user = await getByID(id);
   if (!user) return Promise.reject(new Error("Usuario no encontrado"));
 
