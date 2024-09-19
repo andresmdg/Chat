@@ -9,7 +9,7 @@ import { createServer } from "node:http";
 import db from "#db";
 import app from "#app";
 import { __dirname } from "#root";
-import { loadRouters, loadEvents } from "#utils";
+import { loadRouters, loadEvents, verifyJWT } from "#utils";
 
 // Variables
 const { PORT } = process.env;
@@ -35,6 +35,14 @@ const routesDir = path.join(__dirname, "routes");
     // Websocket listener
     io.on("connection", async (socket) => {
       console.log("[IO] Connection with a user established");
+
+      // comprobar si el usuario es valido:
+      const [valid, uuid] = await verifyJWT(socket.handshake.query["x-token"]);
+      console.log(valid);
+      if (!valid) return socket.disconnect();
+
+      console.log("valido", uuid);
+
       // Load socket events
       await loadEvents(socket, io, eventsDir);
     });
