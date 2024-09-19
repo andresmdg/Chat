@@ -1,6 +1,6 @@
 import { Dispatch, SetStateAction, useState } from "react";
 import { handleActive, handleChange, messages } from "../../utils/utils";
-import { Input } from "../Login";
+import { Input } from "../Input";
 import ChatCard from "./ChatCard";
 import { GiHamburgerMenu } from "react-icons/gi";
 import TapBar from "./Tapbar";
@@ -47,12 +47,11 @@ export default function Chats({ setting, setChats }: ChatI) {
 
   return (
     <div
-      className='h-full grid gap-2 sd_default 
+      className='h-full grid gap-2 sd_default
       max-md:w-screen
       max-lg:w-64
       max-2xl:w-80
       w-96
-    
     '>
       <div className='flex justify-between h-fit m-2'>
         <p className='text-3xl'>Chats</p>
@@ -60,8 +59,8 @@ export default function Chats({ setting, setChats }: ChatI) {
         {/* // * Menu button */}
         <button
           onClick={() => handleActive(setting, setChats)}
-          className={`${setting ? "hidden" : "h-fit w-fit bg-white"}
-           `}>
+          className={`${setting ? "hidden" : "h-fit w-fit bg-white"}`}
+        >
           <GiHamburgerMenu />
         </button>
       </div>
@@ -69,10 +68,10 @@ export default function Chats({ setting, setChats }: ChatI) {
       {/* // * Search bar */}
       <section className='flex w-full h-fit m-'>
         <Input
-          add='mx-4'
-          tipe='text'
+          className='mx-4'
+          type='text'
           placeholder='Search'
-          valueText={search}
+          value={search}
           onChange={(e) => handleChange(e, setsearch)}
         />
       </section>
