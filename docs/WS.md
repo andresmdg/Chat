@@ -14,14 +14,14 @@ El cliente envía el token usando el query string de Socket.IO:
 import { useCallback, useEffect, useState } from "react";
 import io from "socket.io-client";
 
-export const useSocket = (eventName) => {
+export const useSocket = (serverURL) => {
   const [socket, setSocket] = useState(null);
   const [online, setOnline] = useState(false);
 
   const conectarSocket = useCallback(() => {
     const token = localStorage.getItem("token");
 
-    const socketTemp = io.connect(eventName, {
+    const socketTemp = io.connect(serverURL, {
       transports: ["websocket"],
       autoConnect: true,
       forceNew: true,
@@ -82,12 +82,13 @@ io.on("connection", async (socket) => {
 
 ## Eventos
 
-| Event            | Descripción                                        | Payload                                                                                                |
-| ---------------- | -------------------------------------------------- | ------------------------------------------------------------------------------------------------------ |
-| `message:send`   | Se emite cuando se envía un nuevo mensaje.         | `{ id: string, chat_id: string, sender_id: string, body: string, status: string, created_at: string }` |
-| `message:update` | Se emite cuando un mensaje es actualizado.         | `{ id: string, body: string, status: string, updated_at: string }`                                     |
-| `message:delete` | Se emite cuando un mensaje es eliminado.           | `{ id: string }`                                                                                       |
-| `users:online`   | Se emite cuando uno o varios usuarios se conectan. | `{ user_id: string, username: string }`                                                                |
+| Event            | Descripción                                            | Payload                                                                                                |
+| ---------------- | ------------------------------------------------------ | ------------------------------------------------------------------------------------------------------ |
+| `chat:create`    | Se emite cuando un chat grupal o publico se ha creado. | `{ owner_id: string, name: string, isGroup: boolean }`                                                 |
+| `message:send`   | Se emite cuando se envía un nuevo mensaje.             | `{ id: string, chat_id: string, sender_id: string, body: string, status: string, created_at: string }` |
+| `message:update` | Se emite cuando un mensaje es actualizado.             | `{ id: string, body: string, status: string, updated_at: string }`                                     |
+| `message:delete` | Se emite cuando un mensaje es eliminado.               | `{ id: string }`                                                                                       |
+| `users:online`   | Se emite cuando uno o varios usuarios se conectan.     | `{ user_id: string, username: string }`                                                                |
 
 ## Ejemplo de Interacción
 

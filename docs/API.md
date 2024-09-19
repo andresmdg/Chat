@@ -42,7 +42,9 @@ Permite registrar un nuevo usuario en el sistema.
   {
     "name": "string",
     "email": "string",
-    "password": "string"
+    "username": "string",
+    "password": "string",
+    "avatar": "string | null"
   }
   ```
 - **Response**:
@@ -78,5 +80,82 @@ Recupera los mensajes utilizando el chat ID.
         "created_at": "timestamp"
       }
     ]
+  }
+  ```
+
+## Usuarios
+
+| Method | Endpoint           | Descripción                                      | Response                                                                             |
+| ------ | ------------------ | ------------------------------------------------ | ------------------------------------------------------------------------------------ |
+| GET    | `/users/:username` | Obtiene un usuario por nombre de usuario (sin @) | `{ id: string, name: string, email: string, username: string, avatar: string null }` |
+| DELETE | `/users/:id`       | Elimina un usuario por ID si existe              | `{ success: boolean, message: string }`                                              |
+| PATCH  | `/users/:id`       | Actualiza un usuario por ID                      | `{ success: boolean, message: string }`                                              |
+
+### `/users/:username`
+
+Obtiene un usuario utilizando el nombre de usuario (sin `@`).
+
+- **Request Parameters**:
+  - `username` (string): Nombre de usuario sin `@`.
+- **Response**:
+  ```json
+  {
+    "id": "uuid",
+    "name": "string",
+    "email": "string",
+    "username": "string",
+    "avatar": "string | null"
+  }
+  ```
+
+### `/users/:id` (DELETE)
+
+Elimina un usuario utilizando el ID. Retorna un mensaje si el usuario no se encuentra.
+
+- **Request Parameters**:
+  - `id` (string): UUID del usuario a eliminar.
+- **Response**:
+  ```json
+  {
+    "success": true,
+    "message": "User successfully deleted"
+  }
+  ```
+  o
+  ```json
+  {
+    "success": false,
+    "message": "User not found"
+  }
+  ```
+
+### `/users/:id` (PATCH)
+
+Actualiza un usuario utilizando el ID.
+
+- **Request Parameters**:
+  - `id` (string): UUID del usuario a actualizar.
+- **Request Body**:
+  ```json
+  {
+    "name": "string | null",
+    "email": "string | null",
+    "username": "string | null",
+    "password": "string | null",
+    "avatar": "string | null"
+  }
+  ```
+- **Response**:
+  ```json
+  {
+    "success": true,
+    "message": "User successfully updated"
+  }
+  ```
+  o
+  ```json
+  {
+    "success": false,
+    "message": "Update failed"
   }
   ```
