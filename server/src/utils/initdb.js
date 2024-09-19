@@ -16,6 +16,7 @@ async function initDatabase(db) {
           id TEXT PRIMARY KEY,
           name VARCHAR NOT NULL,
           email VARCHAR UNIQUE NOT NULL,
+          username VARCHAR UNIQUE,
           password VARCHAR NOT NULL,
           avatar	VARCHAR,
           created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
