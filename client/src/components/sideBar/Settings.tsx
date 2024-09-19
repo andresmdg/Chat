@@ -16,16 +16,19 @@ export default function Settings({
 
   return (
     <div
-      className='grid sidebar_Row w-96 gap-4 text-start p-4 h-full
+      className={`w-96 gap-4 text-start p-4 h-full
     max-md:w-screen
       max-lg:w-fit
       max-2xl:w-80
-      
-    '>
+      absolute
+      inset-0
+      ${settings ? "grid": "hidden"}
+      ${white ? "bg-[#ffffff]" : "bg-light-yellow"}
+    `}>
       <div className='max-sm:flex max-sm:justify-between max-sm:items-center max-sm:gap-4'>
         <button
           onClick={() => handleActive(settings, setSettings)}
-          className={`h-full w-full rounded-lg p-4 
+          className={`h-full w-full rounded-lg p-4
           hidden max-sm:block
           ${white ? "bg-[#ffffff]" : "bg-yellow-50"}`}>
           <IoIosArrowBack className='h-6 w-6' />
