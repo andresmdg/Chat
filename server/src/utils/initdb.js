@@ -19,6 +19,7 @@ async function initDatabase(db) {
           username VARCHAR UNIQUE,
           password VARCHAR NOT NULL,
           avatar	VARCHAR,
+          online BOOLEAN DEFAULT FALSE
           created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         )
       `,
