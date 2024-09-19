@@ -150,8 +150,8 @@ async function initDatabase(db) {
       db.run(
         `
         CREATE TABLE IF NOT EXISTS role_permissions (
-          role_id INTEGER,
-          permission_id INTEGER,
+          role_id TEXT,
+          permission_id TEXT,
           FOREIGN KEY (role_id) REFERENCES roles(id),
           FOREIGN KEY (permission_id) REFERENCES permissions(id),
         )
