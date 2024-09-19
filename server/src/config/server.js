@@ -1,33 +1,43 @@
 // Modules
+import path from "path";
 import cors from "cors";
 import helmet from "helmet";
 import morgan from "morgan";
 import express from "express";
-import path from 'path';
 
 // Imports
 
 // Variables
 const app = express();
-
-//const whitelist = ['http://localhost:3000', 'http://127.0.0.1:5500', 'http://localhost:5173'];
-//const options = {
-//    origin: (origin, callback) => {
-//        if (whitelist.includes(origin) || !origin) {
-//            callback(null, true);
-//        } else {
-//            callback(new Error('Not allowed by CORS'));
-//        }
-//    },
-//};
+const { CLI_PORT } = process.env;
 
 // Middlewares
 
 app.use(cors());
-app.use(helmet());
+app.use(
+  helmet({
+    contentSecurityPolicy: {
+      directives: {
+        defaultSrc: ["'self'"],
+        scriptSrc: [
+          "'self'",
+          "https://cdn.socket.io",
+          "https://cdn.jsdelivr.net/",
+          "'unsafe-inline'",
+        ],
+        connectSrc: [
+          "'self'",
+          `ws://127.0.0.1:${CLI_PORT}`,
+          `wss://127.0.0.1:${CLI_PORT}`,
+        ],
+      },
+    },
+  })
+);
 app.use(morgan("dev"));
 app.use(express.json());
+app.use(express.static("public"));
 app.use(express.urlencoded({ extended: false }));
-app.use('/uploads', express.static(path.join(process.cwd(), 'uploads')));
+app.use("/uploads", express.static(path.join(process.cwd(), "uploads")));
 
 export default app;

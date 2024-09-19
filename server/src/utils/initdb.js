@@ -13,11 +13,13 @@ async function initDatabase(db) {
       db.run(
         `
         CREATE TABLE IF NOT EXISTS users (
-          id INTEGER PRIMARY KEY AUTOINCREMENT,
+          id TEXT PRIMARY KEY,
           name VARCHAR NOT NULL,
           email VARCHAR UNIQUE NOT NULL,
+          username VARCHAR UNIQUE,
           password VARCHAR NOT NULL,
           avatar	VARCHAR,
+          online BOOLEAN DEFAULT FALSE,
           created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         )
       `,
@@ -30,7 +32,7 @@ async function initDatabase(db) {
       db.run(
         `
         CREATE TABLE IF NOT EXISTS chats (
-          id INTEGER PRIMARY KEY AUTOINCREMENT,
+          id TEXT PRIMARY KEY,
           is_group BOOLEAN NOT NULL,
           created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         )
@@ -44,9 +46,9 @@ async function initDatabase(db) {
       db.run(
         `
         CREATE TABLE IF NOT EXISTS messages (
-          id INTEGER PRIMARY KEY AUTOINCREMENT,
-          chat_id INTEGER,
-          sender_id INTEGER,
+          id TEXT PRIMARY KEY,
+          chat_id TEXT,
+          sender_id TEXT,
           body TEXT NOT NULL,
           status VARCHAR NOT NULL,
           created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -63,9 +65,9 @@ async function initDatabase(db) {
       db.run(
         `
         CREATE TABLE IF NOT EXISTS contacts (
-          id INTEGER PRIMARY KEY AUTOINCREMENT,
-          user_id INTEGER,
-          contact_id INTEGER,
+          id TEXT PRIMARY KEY,
+          user_id TEXT,
+          contact_id TEXT,
           status VARCHAR NOT NULL,
           created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
           FOREIGN KEY (user_id) REFERENCES users(id),
@@ -81,9 +83,9 @@ async function initDatabase(db) {
       db.run(
         `
         CREATE TABLE IF NOT EXISTS groups (
-          id INTEGER PRIMARY KEY AUTOINCREMENT,
-          chat_id INTEGER,
-          owner_id INTEGER,
+          id TEXT PRIMARY KEY,
+          chat_id TEXT,
+          owner_id TEXT,
           name VARCHAR NOT NULL,
           created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
           FOREIGN KEY (chat_id) REFERENCES chats(id),
@@ -99,7 +101,7 @@ async function initDatabase(db) {
       db.run(
         `
         CREATE TABLE IF NOT EXISTS roles (
-          id INTEGER PRIMARY KEY AUTOINCREMENT,
+          id TEXT PRIMARY KEY,
           name VARCHAR NOT NULL,
           description VARCHAR UNIQUE NOT NULL,
           created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
@@ -114,10 +116,10 @@ async function initDatabase(db) {
       db.run(
         `
         CREATE TABLE IF NOT EXISTS group_members (
-          id INTEGER PRIMARY KEY AUTOINCREMENT,
-          user_id INTEGER,
-          chat_id INTEGER,
-          role_id INTEGER,
+          id TEXT PRIMARY KEY,
+          user_id TEXT,
+          chat_id TEXT,
+          role_id TEXT,
           joined_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
           FOREIGN KEY (user_id) REFERENCES users(id),
           FOREIGN KEY (chat_id) REFERENCES chats(id),
@@ -133,7 +135,7 @@ async function initDatabase(db) {
       db.run(
         `
         CREATE TABLE IF NOT EXISTS permissions (
-          id INTEGER PRIMARY KEY AUTOINCREMENT,
+          id TEXT PRIMARY KEY,
           name VARCHAR NOT NULL,
           description VARCHAR UNIQUE NOT NULL,
           created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
@@ -148,24 +150,26 @@ async function initDatabase(db) {
       db.run(
         `
         CREATE TABLE IF NOT EXISTS role_permissions (
-          role_id INTEGER,
-          permission_id INTEGER,
+          role_id TEXT,
+          permission_id TEXT,
           FOREIGN KEY (role_id) REFERENCES roles(id),
           FOREIGN KEY (permission_id) REFERENCES permissions(id),
         )
       `,
         (err) => {
           if (err) reject(err);
-          console.log('[DB] Table "role_permissions" created or already exists');
+          console.log(
+            '[DB] Table "role_permissions" created or already exists'
+          );
           resolve();
         }
       );
       db.run(
         `
         CREATE TABLE IF NOT EXISTS queue (
-          id INTEGER PRIMARY KEY AUTOINCREMENT,          
-          chat_id INTEGER,
-          message_id INTEGER,
+          id TEXT PRIMARY KEY,          
+          chat_id TEXT,
+          message_id TEXT,
           created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
           FOREIGN KEY (chat_id) REFERENCES chats(id),
           FOREIGN KEY (message_id) REFERENCES messages(id)
