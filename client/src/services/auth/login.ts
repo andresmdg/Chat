@@ -1,6 +1,6 @@
 import * as Yup from 'yup';
 
-import {ROUTES} from '../routes';
+import {ENV} from '@/utils/constants';
 
 
 interface LoginCredentials {
@@ -24,7 +24,7 @@ export const login = async (credentials: LoginCredentials): Promise<[Error | nul
   }
 
   try {
-    const response = await fetch(ROUTES.AUTH.LOGIN, {
+    const response = await fetch(ENV.AUTH.LOGIN, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'

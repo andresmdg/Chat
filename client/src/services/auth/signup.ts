@@ -1,5 +1,5 @@
 import * as Yup from 'yup';
-import {ROUTES} from '../routes';
+import {ENV} from '@/utils/constants';
 
 
 interface SignupCredentials {
@@ -25,7 +25,7 @@ export const signup = async (credentials: SignupCredentials): Promise<[Error | n
   }
 
   try {
-    const response = await fetch(ROUTES.AUTH.REGISTER, {
+    const response = await fetch(ENV.AUTH.REGISTER, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
