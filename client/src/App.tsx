@@ -3,8 +3,9 @@ import LoginView from "./components/views/Login";
 import SignupView from "./components/views/Signup";
 import HomeView from "./components/views/Home";
 import { useAuth } from "./components/hooks/useAuth";
-import "./App.css";
 import { useEffect } from "react";
+import { initSocket } from "./utils/socket";
+import "./App.css";
 
 function App() {
   const {accessToken} = useAuth();
@@ -13,6 +14,7 @@ function App() {
 
   useEffect(() => {
     if (accessToken) {
+      initSocket(accessToken)
       navigate('/')
     }
   },[accessToken, navigate])
