@@ -8,6 +8,7 @@ import { useEffect } from "react";
 
 function App() {
   const {accessToken} = useAuth();
+
   const navigate = useNavigate();
 
   useEffect(() => {
