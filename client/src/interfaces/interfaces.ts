@@ -21,3 +21,15 @@ export interface Profile {
   msnAccount: string;
   image: string;
 }
+
+export interface User {
+  id: string,
+  name: string,
+  email: string,
+  username: string | null,
+  avatarUrl: string | null
+}
+export interface UserResponse {
+  success: boolean,
+  user: User
+}

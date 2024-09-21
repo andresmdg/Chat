@@ -7,5 +7,8 @@ export const ENV = {
   AUTH: {
     LOGIN: `${API_BASE_URL}/api/auth/login`,
     REGISTER: `${API_BASE_URL}/api/auth/register`,
+  },
+  USER: {
+    GET_USER: (id: string) => `${API_BASE_URL}/api/users/${id}`,
   }
 }
