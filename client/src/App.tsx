@@ -3,19 +3,23 @@ import LoginView from "./components/views/Login";
 import SignupView from "./components/views/Signup";
 import HomeView from "./components/views/Home";
 import { useAuth } from "./components/hooks/useAuth";
-import "./App.css";
 import { useEffect } from "react";
+import { useSocket } from "@/components/hooks/useSocket";
+import "./App.css";
 
 function App() {
   const {accessToken} = useAuth();
+  const {initSocket} = useSocket();
 
   const navigate = useNavigate();
 
   useEffect(() => {
     if (accessToken) {
+      initSocket(accessToken)
       navigate('/')
     }
-  },[accessToken, navigate])
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  },[accessToken])
 
   return (
     <Routes>

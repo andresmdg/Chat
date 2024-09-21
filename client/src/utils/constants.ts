@@ -2,7 +2,8 @@ import {config} from './config'
 
 const {API_BASE_URL} = config;
 
-export const ROUTES = {
+export const ENV = {
+  API_BASE_URL,
   AUTH: {
     LOGIN: `${API_BASE_URL}/api/auth/login`,
     REGISTER: `${API_BASE_URL}/api/auth/register`,
