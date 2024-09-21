@@ -1,6 +1,6 @@
 import { Dispatch, SetStateAction } from "react";
 import InfoAccount from "./InfoAccount";
-import { ButtonSetting, ButtonSettingNav } from "../Buttons";
+import { ButtonSetting, LogoutButton } from "../Buttons";
 import { handleActive } from "../../utils/utils";
 import { IoIosArrowBack } from "react-icons/io";
 import { useTheme } from "../hooks/useTheme";
@@ -91,8 +91,7 @@ export default function Settings({
             texto='Change Account'
             image='/icons/Change.svg'
           />
-          <ButtonSettingNav
-            goTo='/login'
+          <LogoutButton
             texto='Logout'
             image='/icons/Exit.svg'
           />
