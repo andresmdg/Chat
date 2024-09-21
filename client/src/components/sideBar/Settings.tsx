@@ -18,7 +18,6 @@ export default function Settings({
     <div
       className={`w-96 gap-4 text-start p-4 h-full
     max-md:w-screen
-      max-lg:w-fit
       max-2xl:w-80
       absolute
       inset-0

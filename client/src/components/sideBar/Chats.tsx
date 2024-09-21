@@ -49,7 +49,6 @@ export default function Chats({ setting, setChats }: ChatI) {
     <div
       className='h-full grid gap-2 sd_default
       max-md:w-screen
-      max-lg:w-64
       max-2xl:w-80
       w-96
     '>

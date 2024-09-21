@@ -1,30 +1,40 @@
+import { useAuth } from "../hooks/useAuth";
+
 export default function InfoAccount(params: {
   name: string;
   userName: string;
   email: string;
   white: boolean;
 }) {
+
+  const {user} = useAuth();
+
   return (
     <div
       className={`w-full sidebar_Info h-fit flex-col justify-start items-center gap-6 inline-flex p-2 rounded-lg ${
         params.white ? "bg-[#ffffff]" : "bg-yellow-50"
       }`}>
-      <div className='self-stretch justify-start items-end gap-1 inline-flex'>
-        <div className='w-24 h-24 justify-center items-center flex'>
+      <div className='flex justify-around w-full items-center gap-3'>
+        <div className='w-24 h-24 aspect-square justify-center items-center flex'>
           <img
             className='w-24 h-24 rounded-full border-2 border-teal-900'
             src='https://via.placeholder.com/100x98'
           />
         </div>
-        <div className='w-44 flex-col justify-start items-start gap-2 inline-flex'>
+        <div className='w-full flex-col justify-start items-start gap-2 inline-flex'>
           <div className="self-stretch h-4 text-slate-400 text-base font-normal font-['Inter']">
-            {params.name}
+            {user?.name}
           </div>
-          <p className="self-stretch h-4 text-slate-400 text-base font-normal font-['Inter']">
-            {`<${params.userName}>`}
-          </p>
+
+          {
+            user?.username && (
+              <p className="self-stretch h-4 text-slate-400 text-base font-normal font-['Inter']">
+                { `<${user?.username}>`}
+              </p>
+            )
+          }
           <p className="text-slate-400 text-base font-normal font-['Inter']">
-            {`<${params.email}>`}
+            {`<${user?.email}>`}
           </p>
         </div>
       </div>
