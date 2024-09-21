@@ -57,17 +57,17 @@ export default function Settings({
           <ButtonSetting
             onclick={() => console.log("")}
             texto='Account'
-            image='.\public\icons\Account.svg'
+            image='/icons/Account.svg'
           />
           <ButtonSetting
             onclick={() => console.log("")}
             texto='Messages'
-            image='.\public\icons\Message.svg'
+            image='/icons/Message.svg'
           />
           <ButtonSetting
             onclick={() => console.log("")}
             texto='Info'
-            image='.\public\icons\Info.svg'
+            image='/icons/Info.svg'
           />
         </section>
         {/*  Section themes */}
@@ -90,12 +90,12 @@ export default function Settings({
           <ButtonSetting
             onclick={() => console.log("")}
             texto='Change Account'
-            image='.\public\icons\Change.svg'
+            image='/icons/Change.svg'
           />
           <ButtonSettingNav
             goTo='/login'
             texto='Logout'
-            image='.\public\icons\Exit.svg'
+            image='/icons/Exit.svg'
           />
         </section>
       </div>
