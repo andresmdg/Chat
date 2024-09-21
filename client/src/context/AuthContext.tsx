@@ -1,8 +1,11 @@
 import { useState, useEffect, createContext } from 'react'
 import { Auth } from '@/services/auth'
+import { User } from '@/services/user'
+import { User as UserType } from '@/interfaces/interfaces'
 
 interface AuthValues {
   accessToken: string | null,
+  user: UserType | null,
   login: (accesToken: string) => Promise<void>,
   logout: () => void,
   loading: boolean
@@ -10,6 +13,7 @@ interface AuthValues {
 
 const initialValues: AuthValues = {
   accessToken: null,
+  user: null,
   login: async () => {},
   logout: () => {},
   loading: false
@@ -17,7 +21,7 @@ const initialValues: AuthValues = {
 export const AuthContext = createContext(initialValues)
 
 export function AuthProvider ({children}: {children: React.ReactNode}) {
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState<UserType | null>(null);
   const [token, setToken] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -41,14 +45,29 @@ export function AuthProvider ({children}: {children: React.ReactNode}) {
     try {
       setLoading(true)
       setToken(accessToken)
-      setLoading(false)
-    } catch {
-      setLoading(false)
+
+      const userStorage = await User.UserStorage.get()
+      if (userStorage) {
+        setUser(userStorage);
+        return;
+      }
+      const [error, userData] = await User.getMe(accessToken)
+
+      if (userData) {
+        setUser(userData);
+        await User.UserStorage.set(userData)
+      } else {
+        throw error
+      }
+    } catch (error) {
+      console.error(error);
     }
+    setLoading(false)
   }
 
   const logout = () => {
-    Auth.AccessToken.remove()
+    Auth.AccessToken.remove();
+    User.UserStorage.remove();
     setUser(null)
     setToken(null)
     setLoading(false)
