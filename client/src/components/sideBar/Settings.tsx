@@ -16,22 +16,28 @@ export default function Settings({
 
   return (
     <div
-      className={`w-96 gap-4 text-start p-4 h-full
-    max-md:w-screen
-      max-2xl:w-80
+      className={`w-96 gap-2 text-start p-2 h-full
+      max-md:w-screen
+      max-2xl:w-96
       absolute
       inset-0
+      overflow-y-auto
       ${settings ? "grid": "hidden"}
-      ${white ? "bg-[#ffffff]" : "bg-light-yellow"}
+      ${white ? "bg-[#f3f3f3]" : "bg-light-yellow"}
     `}>
-      <div className='max-sm:flex max-sm:justify-between max-sm:items-center max-sm:gap-4'>
+      <div className='flex justify-between h-fit'>
+        <p className='text-3xl'>Settings</p>
+
+        {/* // * Menu button */}
         <button
           onClick={() => handleActive(settings, setSettings)}
-          className={`h-full w-full rounded-lg p-4
-          hidden max-sm:block
-          ${white ? "bg-[#ffffff]" : "bg-yellow-50"}`}>
-          <IoIosArrowBack className='h-6 w-6' />
+          className={`h-fit w-fit bg-white
+            max-sm:hidden
+            max-2xl:left-80`}>
+          <IoIosArrowBack />
         </button>
+      </div>
+      <div className='max-sm:flex max-sm:justify-between max-sm:items-center max-sm:gap-4'>
         <InfoAccount
           white={white}
           name='Name'
@@ -39,15 +45,7 @@ export default function Settings({
           userName='User'
         />
       </div>
-      {/* // * Back button */}
-      <button
-        onClick={() => handleActive(settings, setSettings)}
-        className={`h-12 w-6 rounded-s p-0 absolute top-20 left-96 
-          max-sm:hidden
-          max-2xl:left-80
-          ${white ? "bg-[#ffffff]" : "bg-yellow-50"}`}>
-        <IoIosArrowBack />
-      </button>
+
       <div className='grid sidebar_Button h-full content-between gap-4'>
         <section
           className={`grid gap-4 h-fit p-2 rounded-lg ${
