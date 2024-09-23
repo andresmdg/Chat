@@ -1,6 +1,7 @@
 import * as Yup from 'yup';
 
 import {ENV} from '@/utils/constants';
+import { loginResponseValidator } from '@/utils/schemas';
 
 
 interface LoginCredentials {
@@ -8,13 +9,7 @@ interface LoginCredentials {
   email: string
 }
 
-const responseValidator = Yup.object({
-  success: Yup.boolean().required(),
-  token: Yup.string().required(),
-  message: Yup.string().required()
-});
-
-type Response = Yup.InferType<typeof responseValidator>
+type Response = Yup.InferType<typeof loginResponseValidator>
 
 export const login = async (credentials: LoginCredentials): Promise<[Error | null, Response | null]> => {
   const { password, email } = credentials;
@@ -33,7 +28,7 @@ export const login = async (credentials: LoginCredentials): Promise<[Error | nul
     });
 
     const result = await response.json();
-    const validResponse = await responseValidator.validate(result);
+    const validResponse = await loginResponseValidator.validate(result);
 
     if (!validResponse.success) throw new Error(validResponse.message);
     return [null , validResponse];

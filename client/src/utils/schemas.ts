@@ -16,3 +16,9 @@ export const userResponseSchema = Yup.object({
     avatarUrl: Yup.string().required().nullable()
   })
 })
+
+export const loginResponseValidator = Yup.object({
+  success: Yup.boolean().required(),
+  token: Yup.string().required(),
+  message: Yup.string().required()
+});
