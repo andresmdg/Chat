@@ -23,15 +23,30 @@ export const AuthContext = createContext(initialValues)
 export function AuthProvider ({children}: {children: React.ReactNode}) {
   const [user, setUser] = useState<UserType | null>(null);
   const [token, setToken] = useState<string | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     (async () => {
+      setLoading(true)
+
       const accessToken = await Auth.AccessToken.get();
       if (!accessToken) {
-        logout()
-        setLoading(false)
+        logout();
+        setLoading(false);
         return
+      }
+
+      const hasExpiredToken = Auth.AccessToken.hasExpired(accessToken);
+
+      if (hasExpiredToken) {
+        const [error, data] = await Auth.relogin(accessToken);
+
+        if (error) logout();
+
+        if (data) {
+          setToken(data.token);
+          await Auth.AccessToken.set(data.token);
+        }
       }
 
       await login(accessToken)
