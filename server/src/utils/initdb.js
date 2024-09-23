@@ -15,8 +15,7 @@ async function initDatabase(db) {
         CREATE TABLE IF NOT EXISTS users (
           id TEXT PRIMARY KEY,
           name VARCHAR NOT NULL,
-          email VARCHAR UNIQUE NOT NULL,
-          username VARCHAR UNIQUE,
+          username VARCHAR UNIQUE NOT NULL,
           password VARCHAR NOT NULL,
           avatar	VARCHAR,
           online BOOLEAN DEFAULT FALSE,
