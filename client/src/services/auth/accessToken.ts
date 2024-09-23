@@ -1,4 +1,4 @@
-import jwtDecode from 'jwt-decode'
+import {jwtDecode} from 'jwt-decode'
 import { LocalStorage } from "@/utils/localStorage"
 
 export class AccessToken {
@@ -18,7 +18,10 @@ export class AccessToken {
     const { exp } = jwtDecode(token);
     const currentTime = new Date().getTime();
 
-    return exp <= currentTime;
+    if (exp && exp <= currentTime) {
+      return true;
+    }
+    return false ;
   }
 }
 
