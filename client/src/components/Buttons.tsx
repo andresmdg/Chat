@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { useAuth } from "./hooks/useAuth";
 
 type ButtonFormProps = React.ButtonHTMLAttributes<HTMLButtonElement>;
 
@@ -13,21 +13,22 @@ export function ButtonForm({children, ...rest}: ButtonFormProps) {
   );
 }
 
-export function ButtonSettingNav(params: {
+export function LogoutButton(params: {
   image: string;
   texto: string;
-  goTo: string;
 }) {
+
+  const {logout} = useAuth();
   return (
-    <Link
-      to={params.goTo}
-      className=' cursor-pointer flex gap-2 w-full bg-inherit m-0 p-0 hover:bg-[#8989893d] hover:border-none hover:scale-110 hover:transition-all hover:duration-500'>
+    <button
+      onClick={logout}
+      className='cursor-pointer group border-none hover:border-none flex gap-2 w-full bg-inherit m-0 p-0 hover:bg-[#8989893d] hover:scale-105 hover:transition-all hover:duration-300'>
       <img src={params.image} alt={params.texto} />
       <div className='grid gap-2 w-full text-start mt-auto'>
         <p>{params.texto}</p>
-        <hr className='hover:w-0' />
+        <hr className='group-hover:opacity-0' />
       </div>
-    </Link>
+    </button>
   );
 }
 

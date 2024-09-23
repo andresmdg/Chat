@@ -49,7 +49,7 @@ export default function Chats({ setting, setChats }: ChatI) {
     <div
       className='h-full grid gap-2 sd_default
       max-md:w-screen
-      max-2xl:w-80
+      max-2xl:w-96
       w-96
     '>
       <div className='flex justify-between h-fit m-2'>
