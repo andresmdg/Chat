@@ -6,6 +6,8 @@
   }
 */
 
+import { Log } from "#utils";
+
 export default (data) => {
-  console.log("[IO] User disconnected");
+  new Log("User disconnected", "info", "socket");
 };

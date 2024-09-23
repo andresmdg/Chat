@@ -1,38 +1,48 @@
 import path from "node:path";
 import fs from "node:fs/promises";
-
-import { __dirname } from "#root";
+import { Log } from "#utils";
 
 async function loadEvents(client, io, baseDir) {
-  let currentDir = "";
   const stack = [baseDir];
 
   while (stack.length) {
-    currentDir = stack.pop();
-
-    let files = await fs.readdir(currentDir);
+    const currentDir = stack.pop();
+    const files = await fs.readdir(currentDir);
 
     for (const file of files) {
       const filePath = path.join(currentDir, file);
       const fileStat = await fs.lstat(filePath);
-      if (fileStat.isDirectory()) stack.push(filePath);
-      else if (file.endsWith(".js")) {
+
+      if (fileStat.isDirectory()) {
+        stack.push(filePath);
+      } else if (file.endsWith(".js")) {
         const eventName = parseEventName(baseDir, filePath);
         try {
-          let eventModule = await import(filePath);
-          if (eventModule.default)
+          const eventModule = await import(filePath);
+          const relativePath = path.relative(baseDir, filePath);
+
+          if (eventModule.default) {
             client.on(
               eventName,
               eventModule.default.bind(null, { eventName, client, io })
             );
-          else
-            console.warn(
-              `[IO] File ${filePath} does not export a default Event.`
+            new Log(
+              `Event "${eventName}" loaded  |  [SOURCE]  ${relativePath}`,
+              "info",
+              "socket"
             );
+          } else {
+            new Log(
+              `${eventName} lacks a default export  |  [SOURCE]  ${relativePath}`,
+              "warning",
+              "socket"
+            );
+          }
         } catch (err) {
-          console.error(
-            "[IO] There was an error initializing the " + eventName + " event",
-            err
+          new Log(
+            `Failed to initialize "${eventName}"  |  [REASON]  ${err.message}`,
+            "error",
+            "socket"
           );
         }
       }
@@ -41,10 +51,8 @@ async function loadEvents(client, io, baseDir) {
 }
 
 function parseEventName(basedir, filePath) {
-  let relativePath = path.relative(basedir, filePath).split(".js").join("");
-  let route = relativePath.split("/").join(":");
-
-  return route;
+  const relativePath = path.relative(basedir, filePath).replace(".js", "");
+  return relativePath.split(path.sep).join(":");
 }
 
 export default loadEvents;

@@ -1,5 +1,5 @@
 // Modules
-import "dotenv/config";
+import "#env";
 
 import path from "node:path";
 import { Server } from "socket.io";
@@ -9,8 +9,8 @@ import { createServer } from "node:http";
 import db from "#db";
 import app from "#app";
 import { __dirname } from "#root";
-import { chatsModel } from "#models";
-import { loadRouters, loadEvents, verifyJWT } from "#utils";
+import { chatsModel, usersModel } from "#models";
+import { Log, loadRouters, loadEvents, verifyJWT } from "#utils";
 
 // Variables
 const { PORT } = process.env;
@@ -18,8 +18,8 @@ const { PORT } = process.env;
 const server = createServer(app);
 const io = new Server(server);
 
-const eventsDir = path.join(__dirname, "events");
-const routesDir = path.join(__dirname, "routes");
+const eventsDir = path.join(__dirname, "src/events");
+const routesDir = path.join(__dirname, "src/routes");
 
 (async () => {
   try {
@@ -29,38 +29,59 @@ const routesDir = path.join(__dirname, "routes");
     await loadRouters(app, routesDir);
 
     // Running server
-    const listener = server.listen(PORT, () =>
-      console.log(`[SR] listening on port: ${listener.address().port}`)
+    const listener = server.listen(
+      PORT,
+      () => new Log(`Listening on port: ${listener.address().port}`, "info")
     );
 
     // Websocket listener
     io.on("connection", async (socket) => {
-      console.log("[IO] Connection with a user established");
+      new Log("Connection with a user established", "info", "socket");
 
       // Comprobar si el usuario es válido:
       const [valid, uuid] = await verifyJWT(socket.handshake.query["x-token"]);
-      if (!valid) return socket.disconnect();
+      if (!valid) {
+        new Log("User disconnected");
+        return socket.disconnect();
+      }
 
       try {
+        await usersModel.userOnline(uuid);
+
         // Obtener una lista de chat_ids en los que el usuario está involucrado
         const chatIds = await chatsModel.getUserChats(uuid);
 
         if (chatIds) {
+          new Log("Chats id " + chatIds, "info", "socket");
           // Unirse a cada sala de chat
           chatIds.forEach((chatId) => {
+            new Log(chatId, "info", "socket");
             socket.join(chatId);
           });
         }
 
         // Load socket events
         await loadEvents(socket, io, eventsDir);
+
+        // Client emit events
+        socket.onAny((eventName, ...args) => {
+          new Log(
+            `Event emitted by client  |  [EVENT]  '${eventName}'`,
+            "info",
+            "socket"
+          );
+        });
       } catch (error) {
-        console.error("[IO] Error joining chat rooms:", error);
+        new Log(
+          `Error joining chat rooms  |  [MESSAGE]  ${error.message}`,
+          "error",
+          "socket"
+        );
         socket.disconnect();
       }
     });
   } catch (error) {
-    console.log(`[SR] An error was occured: ${error.message}`);
+    new Log(error.message, error.level, error.emisor);
     setTimeout(() => {
       process.exit(1);
     }, 1000);

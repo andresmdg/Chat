@@ -1,11 +1,10 @@
 import path from "node:path";
 import fs from "node:fs/promises";
-
-import { parseRouter } from "#utils";
+import { Log, parseRouter } from "#utils";
 
 async function loadRouters(client, baseDir) {
   let dir = "";
-  let stack = [baseDir];
+  const stack = [baseDir];
 
   while (stack.length) {
     dir = stack.pop();
@@ -17,27 +16,42 @@ async function loadRouters(client, baseDir) {
         const filePath = path.join(dir, file);
         const fileStat = await fs.lstat(filePath);
 
-        if (fileStat.isDirectory()) stack.push(filePath);
-        else if (file.endsWith(".js")) {
+        if (fileStat.isDirectory()) {
+          stack.push(filePath);
+        } else if (file.endsWith(".js")) {
           const routePath = parseRouter(baseDir, filePath);
           try {
             const routeModule = await import(filePath);
+            const relativePath = path.relative(baseDir, filePath);
             if (routeModule.default) {
               client.use(`/${routePath}`, routeModule.default);
+              new Log(
+                `Loaded '/${routePath}'  |  [SOURCE]  ${relativePath}`,
+                "info",
+                "router"
+              );
             } else {
-              console.warn(
-                `[SR] File ${filePath} does not export a default Router.`
+              new Log(
+                `${relativePath} lacks default export.`,
+                "warning",
+                "router"
               );
             }
           } catch (err) {
-            console.error(
-              `[SR] Error importing route from ${filePath}: ${err.message}`
+            new Log(
+              `Error importing ${relativePath}  |  [REASON]  ${err.message}`,
+              "error",
+              "router"
             );
           }
         }
       }
     } catch (err) {
-      console.error(`[SR] Error reading directory ${dir}: ${err.message}`);
+      throw new Log(
+        `Error reading ${dir}  |  [REASON]  ${err.message}`,
+        "error",
+        "router"
+      );
     }
   }
 }
