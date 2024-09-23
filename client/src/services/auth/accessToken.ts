@@ -1,3 +1,4 @@
+import jwtDecode from 'jwt-decode'
 import { LocalStorage } from "@/utils/localStorage"
 
 export class AccessToken {
@@ -12,4 +13,12 @@ export class AccessToken {
   static async remove () {
     LocalStorage.removeItem('ACCESS_TOKEN');
   }
+
+  static hasExpired (token: string) {
+    const { exp } = jwtDecode(token);
+    const currentTime = new Date().getTime();
+
+    return exp <= currentTime;
+  }
 }
+
