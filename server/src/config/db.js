@@ -4,6 +4,7 @@ import sqlite3 from "sqlite3";
 import fs from "node:fs/promises";
 
 // Imports
+import { Log } from "#utils";
 import { __dirname } from "#root";
 
 // Variables
@@ -12,17 +13,17 @@ const { DB_DIR } = process.env;
 
 // db dir exists
 async function dirExists(dir) {
-  console.log("[DB] Checking directory");
+  new Log("Checking directory", "info", "module");
   try {
     await fs.access(dir);
-    console.log("[DB] Directory exists");
+    new Log("Directory exists", "info", "module");
   } catch (err) {
-    console.log("[DB] Directory does not exist, creating...");
+    new Log("Directory does not exist, creating...", "warn", "module");
     if (err.code === "ENOENT") {
       await fs.mkdir(dir, { recursive: true });
-      console.log(`[DB] Directory created: ${dir}`);
+      new Log(`Directory created: ${dir}`, "warn", "module");
     } else {
-      console.error(`[DB] Error checking directory: ${err.message}`);
+      new Log(`Error checking directory: ${err.message}`, "error", "module");
     }
   }
 }
@@ -30,25 +31,25 @@ async function dirExists(dir) {
 // db connection
 async function db() {
   if (db_instance) return db_instance;
-  console.log("[DB] Making connection");
+  new Log("Making connection", "info", "module");
 
   const databaseDir =
-    path.join(__dirname, DB_DIR) || path.join(__dirname, "db");
+    path.join(__dirname, DB_DIR) || path.join(__dirname, "module");
   const databaseFile = path.join(databaseDir, "db.sqlite");
 
   const databasePath = path.resolve(databaseFile);
 
   await dirExists(databaseDir);
 
-  console.log("[DB] Establishing connection");
+  new Log("Establishing connection", "info", "module");
 
   return new Promise((resolve, reject) => {
     const database = new sqlite3.Database(databasePath, (error) => {
       if (error) {
-        console.error("[DB] Connection failed: ", error.message);
+        new Log(`Connection failed: ${error.message}`, "error", "module");
         reject(error);
       } else {
-        console.log("[DB] Successful connection.");
+        new Log("Successful connection.", "info", "module");
         db_instance = database;
         resolve(db_instance);
       }

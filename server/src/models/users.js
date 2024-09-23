@@ -1,6 +1,7 @@
 import { v4 as uuidv4 } from "uuid";
 
 import db from "#db";
+import { Log } from "#utils";
 
 async function add(name, email, password, avatarUrl) {
   const database = await db();
@@ -133,4 +134,55 @@ async function update(id, params) {
   });
 }
 
-export default { getByEmail, getByUsername, getByID, add, drop, update };
+async function userOnline(id) {
+  const user = await getByID(id);
+
+  if (!user) {
+    return Promise.reject(new Log("User not found", "error", "userOnline"));
+  }
+
+  try {
+    await update(id, { online: true });
+    new Log(`User ${user.username || id} is now online`, "info", "userOnline");
+    return Promise.resolve(true);
+  } catch (error) {
+    new Log(
+      `Failed to update user status  |  [REASON] ${error.message}`,
+      "error",
+      "userOnline"
+    );
+    return Promise.reject(error);
+  }
+}
+
+async function userOffline(id) {
+  const user = await getByID(id);
+
+  if (!user) {
+    return Promise.reject(new Log("User not found", "error", "userOffline"));
+  }
+
+  try {
+    await update(id, { online: false });
+    new Log(`User ${id} is now offline`, "info", "userOffline");
+    return Promise.resolve(true);
+  } catch (error) {
+    new Log(
+      `Failed to update user status  |  [REASON] ${error.message}`,
+      "error",
+      "userOffline"
+    );
+    return Promise.reject(error);
+  }
+}
+
+export default {
+  getByEmail,
+  getByUsername,
+  getByID,
+  add,
+  drop,
+  update,
+  userOnline,
+  userOffline,
+};
