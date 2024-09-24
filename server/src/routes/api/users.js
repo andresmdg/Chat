@@ -21,7 +21,6 @@ router.get("/username/:username", async (req, res) => {
   try {
     const { username } = req.params;
 
-    // Quitar el símbolo @ si está presente
     if (username.startsWith("@")) {
       username = username.substring(1);
     }

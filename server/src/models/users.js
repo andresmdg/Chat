@@ -149,7 +149,7 @@ async function userOnline(id) {
     new Log(
       `Failed to update user status  |  [REASON] ${error.message}`,
       "error",
-      "userOnline"
+      "access"
     );
     return Promise.reject(error);
   }
@@ -170,7 +170,7 @@ async function userOffline(id) {
     new Log(
       `Failed to update user status  |  [REASON] ${error.message}`,
       "error",
-      "userOffline"
+      "access"
     );
     return Promise.reject(error);
   }

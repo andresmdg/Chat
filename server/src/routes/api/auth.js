@@ -1,13 +1,14 @@
 import express from "express";
-import { auth } from "#controllers";
 import jwt from "jsonwebtoken";
+
 import upload from "#multer";
+import { auth, renew } from "#controllers";
 
 const router = express.Router();
 
 const { SCRT } = process.env;
 
-router.post("/register", upload.single('avatar'), (req, res, next) => {
+router.post("/register", upload.single("avatar"), (req, res, next) => {
   auth.authenticate("register", (err, user, info) => {
     if (err) {
       return res.status(400).json({ success: false, message: err.message });
@@ -28,10 +29,12 @@ router.post("/login", (req, res, next) => {
       return res.status(400).json({ success: false, message: info.message });
     }
     const token = jwt.sign({ id: user.id }, SCRT, {
-      expiresIn: "1h",
+      expiresIn: "24h",
     });
     res.status(200).json({ success: true, token, message: info.message });
   })(req, res, next);
 });
+
+router.post("/renew-token", renew);
 
 export default router;

@@ -2,7 +2,7 @@ import path from "node:path";
 import fs from "node:fs/promises";
 import { Log } from "#utils";
 
-async function loadEvents(client, io, baseDir) {
+async function loadEvents(uuid, client, io, baseDir) {
   const stack = [baseDir];
 
   while (stack.length) {
@@ -24,7 +24,7 @@ async function loadEvents(client, io, baseDir) {
           if (eventModule.default) {
             client.on(
               eventName,
-              eventModule.default.bind(null, { eventName, client, io })
+              eventModule.default.bind(null, { eventName, client, io, uuid })
             );
             new Log(
               `Event "${eventName}" loaded  |  [SOURCE]  ${relativePath}`,

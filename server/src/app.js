@@ -41,7 +41,11 @@ const routesDir = path.join(__dirname, "src/routes");
       // Comprobar si el usuario es válido:
       const [valid, uuid] = await verifyJWT(socket.handshake.query["x-token"]);
       if (!valid) {
-        new Log("User disconnected");
+        new Log(
+          "Client disconnected  |  [REASON]  Invalid session token",
+          "warning",
+          "socket"
+        );
         return socket.disconnect();
       }
 
@@ -61,7 +65,7 @@ const routesDir = path.join(__dirname, "src/routes");
         }
 
         // Load socket events
-        await loadEvents(socket, io, eventsDir);
+        await loadEvents(uuid, socket, io, eventsDir);
 
         // Client emit events
         socket.onAny((eventName, ...args) => {
