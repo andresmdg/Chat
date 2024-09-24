@@ -1,92 +1,97 @@
-import bcrypt from "bcryptjs";
-import passport from "passport";
-import { Strategy as LocalStrategy } from "passport-local";
-import { Strategy as JwtStrategy, ExtractJwt } from "passport-jwt";
+// Modules
+import bcrypt from 'bcryptjs'
+import passport from 'passport'
+import { Strategy as LocalStrategy } from 'passport-local'
+import { Strategy as JwtStrategy, ExtractJwt } from 'passport-jwt'
 
-import { usersModel } from "#models";
+// Imports
+import { usersModel } from '#models'
 
-const { SCRT } = process.env;
+// Variables
+const { SCRT } = process.env
 const opts = {
   jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-  secretOrKey: SCRT,
-};
+  secretOrKey: SCRT
+}
+
+// Middlewares
 
 passport.use(
-  "register",
+  'register',
   new LocalStrategy(
     {
-      usernameField: "username",
-      passwordField: "password",
-      passReqToCallback: true,
+      usernameField: 'username',
+      passwordField: 'password',
+      passReqToCallback: true
     },
     async (req, username, password, done) => {
       try {
-        const existingUser = await usersModel.getByUsername(username);
+        const existingUser = await usersModel.getByUsername(username)
         if (existingUser) {
-          return done(null, false, { message: "Username already taken" });
+          return done(null, false, { message: 'Username already taken' })
         }
 
         const avatarUrl = req.file?.filename
           ? `/uploads/avatars/${req.file.filename}`
-          : null;
+          : null
 
-        const hashedPassword = await bcrypt.hash(password, 10);
-        const { name } = req.body;
+        const hashedPassword = await bcrypt.hash(password, 10)
+        const { name } = req.body
         const newUser = await usersModel.add(
           name,
           username,
           hashedPassword,
           avatarUrl
-        );
+        )
 
-        return done(null, newUser);
+        return done(null, newUser)
       } catch (error) {
-        return done(error);
+        return done(error)
       }
     }
   )
-);
+)
 
 passport.use(
-  "login",
+  'login',
   new LocalStrategy(
     {
-      usernameField: "username",
-      passwordField: "password",
+      usernameField: 'username',
+      passwordField: 'password'
     },
     async (username, password, done) => {
       try {
-        const user = await usersModel.getByUsername(username);
+        const user = await usersModel.getByUsername(username)
         if (!user) {
-          return done(null, false, { message: "Invalid username or password" });
+          return done(null, false, { message: 'Invalid username or password' })
         }
 
-        const isValidPassword = await bcrypt.compare(password, user.password);
+        const isValidPassword = await bcrypt.compare(password, user.password)
         if (!isValidPassword) {
-          return done(null, false, { message: "Invalid username or password" });
+          return done(null, false, { message: 'Invalid username or password' })
         }
 
-        return done(null, user, { message: "Login successful" });
+        return done(null, user, { message: 'Login successful' })
       } catch (error) {
-        return done(error);
+        return done(error)
       }
     }
   )
-);
+)
 
 passport.use(
   new JwtStrategy(opts, async (jwt_payload, done) => {
     try {
-      const user = await usersModel.getByID(jwt_payload.id);
+      const user = await usersModel.getByID(jwt_payload.id)
       if (user) {
-        return done(null, user);
+        return done(null, user)
       } else {
-        return done(null, false, { message: "Token not valid" });
+        return done(null, false, { message: 'Token not valid' })
       }
     } catch (error) {
-      return done(error, false);
+      return done(error, false)
     }
   })
-);
+)
 
-export default passport;
+export default passport

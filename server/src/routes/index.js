@@ -1,9 +1,13 @@
-import { Router } from "express";
+// Modules
 
-const router = Router();
+import { Router } from 'express'
 
-router.get("/", (rq, rs) => {
-  rs.send({ data: 1 });
-});
+// Variables
+const router = Router()
 
-export default router;
+// Routes
+router.get('/', (rq, rs) => {
+  rs.send({ data: 1 })
+})
+
+export default router

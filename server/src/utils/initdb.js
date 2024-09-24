@@ -1,12 +1,14 @@
-import "dotenv/config";
+// Modules
+import { fileURLToPath } from 'url'
 
-import { fileURLToPath } from "url";
+// Imports
+import '#env'
+import database from '#db'
 
-import database from "#db";
+// Variables
+const __filename = fileURLToPath(import.meta.url)
 
-const __filename = fileURLToPath(import.meta.url);
-
-// creating tables
+// Methods
 async function initDatabase(db) {
   return new Promise((resolve, reject) => {
     db.serialize(() => {
@@ -22,12 +24,12 @@ async function initDatabase(db) {
           created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         )
       `,
-        (err) => {
-          if (err) reject(err);
-          console.log('[DB] Table "users" created or already exists');
-          resolve();
+        err => {
+          if (err) reject(err)
+          console.log('[DB] Table "users" created or already exists')
+          resolve()
         }
-      );
+      )
       db.run(
         `
         CREATE TABLE IF NOT EXISTS chats (
@@ -36,12 +38,12 @@ async function initDatabase(db) {
           created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         )
       `,
-        (err) => {
-          if (err) reject(err);
-          console.log('[DB] Table "chats" created or already exists');
-          resolve();
+        err => {
+          if (err) reject(err)
+          console.log('[DB] Table "chats" created or already exists')
+          resolve()
         }
-      );
+      )
       db.run(
         `
         CREATE TABLE IF NOT EXISTS messages (
@@ -55,12 +57,12 @@ async function initDatabase(db) {
           FOREIGN KEY (sender_id) REFERENCES users(id)
         )
       `,
-        (err) => {
-          if (err) reject(err);
-          console.log('[DB] Table "messages" created or already exists');
-          resolve();
+        err => {
+          if (err) reject(err)
+          console.log('[DB] Table "messages" created or already exists')
+          resolve()
         }
-      );
+      )
       db.run(
         `
         CREATE TABLE IF NOT EXISTS contacts (
@@ -73,12 +75,12 @@ async function initDatabase(db) {
           FOREIGN KEY (contact_id) REFERENCES contacts(id)
         )
       `,
-        (err) => {
-          if (err) reject(err);
-          console.log('[DB] Table "contacts" created or already exists');
-          resolve();
+        err => {
+          if (err) reject(err)
+          console.log('[DB] Table "contacts" created or already exists')
+          resolve()
         }
-      );
+      )
       db.run(
         `
         CREATE TABLE IF NOT EXISTS groups (
@@ -91,12 +93,12 @@ async function initDatabase(db) {
           FOREIGN KEY (owner_id) REFERENCES users(id),
         )
       `,
-        (err) => {
-          if (err) reject(err);
-          console.log('[DB] Table "groups" created or already exists');
-          resolve();
+        err => {
+          if (err) reject(err)
+          console.log('[DB] Table "groups" created or already exists')
+          resolve()
         }
-      );
+      )
       db.run(
         `
         CREATE TABLE IF NOT EXISTS roles (
@@ -106,12 +108,12 @@ async function initDatabase(db) {
           created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         )
       `,
-        (err) => {
-          if (err) reject(err);
-          console.log('[DB] Table "roles" created or already exists');
-          resolve();
+        err => {
+          if (err) reject(err)
+          console.log('[DB] Table "roles" created or already exists')
+          resolve()
         }
-      );
+      )
       db.run(
         `
         CREATE TABLE IF NOT EXISTS group_members (
@@ -125,12 +127,12 @@ async function initDatabase(db) {
           FOREIGN KEY (role_id) REFERENCES roles(id)
         )
       `,
-        (err) => {
-          if (err) reject(err);
-          console.log('[DB] Table "group_members" created or already exists');
-          resolve();
+        err => {
+          if (err) reject(err)
+          console.log('[DB] Table "group_members" created or already exists')
+          resolve()
         }
-      );
+      )
       db.run(
         `
         CREATE TABLE IF NOT EXISTS permissions (
@@ -140,12 +142,12 @@ async function initDatabase(db) {
           created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         )
       `,
-        (err) => {
-          if (err) reject(err);
-          console.log('[DB] Table "permissions" created or already exists');
-          resolve();
+        err => {
+          if (err) reject(err)
+          console.log('[DB] Table "permissions" created or already exists')
+          resolve()
         }
-      );
+      )
       db.run(
         `
         CREATE TABLE IF NOT EXISTS role_permissions (
@@ -155,14 +157,12 @@ async function initDatabase(db) {
           FOREIGN KEY (permission_id) REFERENCES permissions(id),
         )
       `,
-        (err) => {
-          if (err) reject(err);
-          console.log(
-            '[DB] Table "role_permissions" created or already exists'
-          );
-          resolve();
+        err => {
+          if (err) reject(err)
+          console.log('[DB] Table "role_permissions" created or already exists')
+          resolve()
         }
-      );
+      )
       db.run(
         `
         CREATE TABLE IF NOT EXISTS queue (
@@ -174,25 +174,24 @@ async function initDatabase(db) {
           FOREIGN KEY (message_id) REFERENCES messages(id)
         )
       `,
-        (err) => {
-          if (err) reject(err);
-          console.log('[DB] Table "queue" created or already exists');
-          resolve();
+        err => {
+          if (err) reject(err)
+          console.log('[DB] Table "queue" created or already exists')
+          resolve()
         }
-      );
-    });
-  });
+      )
+    })
+  })
 }
 
-// Si se ejecuta directamente como script (por ejemplo con npm run initdb)
 if (process.argv[1] === __filename) {
-  console.log("[DB] Database initialization started");
-  const db = await database();
+  console.log('[DB] Database initialization started')
+  const db = await database()
   initDatabase(db)
     .then(() => {
-      console.log("[DB] Database initialization complete");
+      console.log('[DB] Database initialization complete')
     })
-    .catch((error) => {
-      console.error("[DB] Error initializing database:", error.message);
-    });
+    .catch(error => {
+      console.error('[DB] Error initializing database:', error.message)
+    })
 }

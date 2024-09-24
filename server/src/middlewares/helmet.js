@@ -1,7 +1,10 @@
-import helmet from "helmet";
+// Modules
+import helmet from 'helmet'
 
-const { CLI_PORT } = process.env;
+// Variables
+const { CLI_PORT } = process.env
 
+// Middleware
 const helmetMid = () =>
   helmet({
     contentSecurityPolicy: {
@@ -9,9 +12,9 @@ const helmetMid = () =>
         defaultSrc: ["'self'"],
         scriptSrc: [
           "'self'",
-          "https://cdn.socket.io",
-          "https://cdn.jsdelivr.net/",
-          "'unsafe-inline'",
+          'https://cdn.socket.io',
+          'https://cdn.jsdelivr.net/',
+          "'unsafe-inline'"
         ],
         connectSrc: [
           "'self'",
@@ -22,10 +25,10 @@ const helmetMid = () =>
           `http://127.0.0.1:${CLI_PORT}`,
           `https://127.0.0.1:${CLI_PORT}`,
           `http://localhost:${CLI_PORT}`,
-          `https://localhost:${CLI_PORT}`,
-        ],
-      },
-    },
-  });
+          `https://localhost:${CLI_PORT}`
+        ]
+      }
+    }
+  })
 
-export default helmetMid;
+export default helmetMid

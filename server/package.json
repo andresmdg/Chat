@@ -17,7 +17,9 @@
   "scripts": {
     "dev": "NODE_ENV=development nodemon src/app.js",
     "start": "NODE_ENV=production node src/app.js",
-    "init-db": "node src/utils/initdb.js"
+    "init-db": "node src/utils/initdb.js",
+    "test": "jest",
+    "prettier": "prettier --write ."
   },
   "keywords": [],
   "author": "",
@@ -39,7 +41,9 @@
     "uuid": "^10.0.0"
   },
   "devDependencies": {
+    "jest": "^29.7.0",
     "morgan": "^1.10.0",
-    "nodemon": "^3.1.4"
+    "nodemon": "^3.1.4",
+    "prettier": "^3.3.3"
   }
 }

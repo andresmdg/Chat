@@ -1,77 +1,82 @@
-import path from "node:path";
-import fs from "node:fs/promises";
-import { __dirname } from "#root";
+// Modules
+import path from 'node:path'
+import fs from 'node:fs/promises'
 
-const { NODE_ENV } = process.env;
+// Imports
+import { __dirname } from '#root'
 
+// Variables
+const { NODE_ENV } = process.env
+
+// Methods
 class Logger extends Error {
-  constructor(message, level = "error", emisor = "server") {
-    super(message);
-    this.emisor = emisor;
-    this.level = level;
+  constructor(message, level = 'error', emisor = 'server') {
+    super(message)
+    this.emisor = emisor
+    this.level = level
 
-    Error.captureStackTrace(this, this.constructor);
+    Error.captureStackTrace(this, this.constructor)
 
-    if (level === "ERROR") {
-      this.logError();
+    if (level === 'ERROR') {
+      this.logError()
     } else {
-      this.logRegister();
+      this.logRegister()
     }
   }
 
   async logRegister() {
-    const logMessage = this.createLogMessage();
-    await this.writeLog(logMessage);
+    const logMessage = this.createLogMessage()
+    await this.writeLog(logMessage)
   }
 
   async logError() {
-    const logMessage = this.createLogMessage();
-    await this.writeLog(logMessage);
-    throw this;
+    const logMessage = this.createLogMessage()
+    await this.writeLog(logMessage)
+    throw this
   }
 
   createLogMessage() {
     const options = {
-      hour: "2-digit",
-      minute: "2-digit",
-      second: "2-digit",
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit',
       hour12: false, // formato de 24 horas
-      timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
-    };
+      timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone
+    }
 
-    const timestamp = new Date().toLocaleTimeString("en-US", options);
+    const timestamp = new Date().toLocaleTimeString('en-US', options)
 
     return `[${this.emisor.toUpperCase()}] ${timestamp} |  [${this.level.toUpperCase()}]  ${
       this.message
-    }\n`;
+    }\n`
   }
 
   async writeLog(logMessage) {
-    const logDir = path.join(__dirname, "logs");
-    const logFilePath = path.join(logDir, "logs.log");
+    const logDir = path.join(__dirname, 'logs')
+    const logFilePath = path.join(logDir, 'logs.log')
 
-    if (NODE_ENV === "development")
-      console.log(`[${this.emisor.toUpperCase()}]  ${this.message}`);
+    if (NODE_ENV === 'development')
+      console.log(`[${this.emisor.toUpperCase()}]  ${this.message}`)
 
     try {
-      await fs.mkdir(logDir, { recursive: true });
+      await fs.mkdir(logDir, { recursive: true })
     } catch (err) {
-      console.error(`Error al crear la carpeta de logs: ${err.message}`);
+      console.error(`Error al crear la carpeta de logs: ${err.message}`)
     }
 
     try {
-      await fs.access(logFilePath);
+      await fs.access(logFilePath)
     } catch {
-      await fs.writeFile(logFilePath, "", "utf8");
+      await fs.writeFile(logFilePath, '', 'utf8')
     }
 
     try {
-      await fs.appendFile(logFilePath, logMessage, "utf8");
+      await fs.appendFile(logFilePath, logMessage, 'utf8')
     } catch (err) {
       const errorLogMessage = `[${this.emisor.toUpperCase()}] :  [ERROR]  Error al escribir en el log: ${
         err.message
-      }\n`;
-      console.error(errorLogMessage);
+      }\n`
+      console.error(errorLogMessage)
     }
   }
 }
@@ -89,4 +94,4 @@ try {
 }
 */
 
-export default Logger;
+export default Logger
