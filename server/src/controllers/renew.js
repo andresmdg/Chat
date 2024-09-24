@@ -44,9 +44,8 @@ const renewController = async (req, res) => {
         .status(404)
         .json({ success: false, message: "User not found" });
     }
-
-    // Generar un nuevo token con una validez de 1 hora
-    const newToken = jwt.sign({ id: user.id }, SCRT, { expiresIn: "1h" });
+    
+    const newToken = jwt.sign({ id: user.id }, SCRT, { expiresIn: "24h" });
 
     // Responder con el nuevo token
     return res.status(200).json({
