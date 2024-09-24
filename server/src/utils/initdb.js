@@ -4,6 +4,7 @@ import { fileURLToPath } from 'url'
 // Imports
 import '#env'
 import database from '#db'
+import { Log } from '#utils'
 
 // Variables
 const __filename = fileURLToPath(import.meta.url)
@@ -26,7 +27,7 @@ async function initDatabase(db) {
       `,
         err => {
           if (err) reject(err)
-          console.log('[DB] Table "users" created or already exists')
+          new Log('Table "users" created', 'info', 'initdb')
           resolve()
         }
       )
@@ -40,7 +41,7 @@ async function initDatabase(db) {
       `,
         err => {
           if (err) reject(err)
-          console.log('[DB] Table "chats" created or already exists')
+          new Log('Table "chats" created', 'info', 'initdb')
           resolve()
         }
       )
@@ -59,7 +60,7 @@ async function initDatabase(db) {
       `,
         err => {
           if (err) reject(err)
-          console.log('[DB] Table "messages" created or already exists')
+          new Log('Table "messages" created', 'info', 'initdb')
           resolve()
         }
       )
@@ -72,12 +73,12 @@ async function initDatabase(db) {
           status VARCHAR NOT NULL,
           created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
           FOREIGN KEY (user_id) REFERENCES users(id),
-          FOREIGN KEY (contact_id) REFERENCES contacts(id)
+          FOREIGN KEY (contact_id) REFERENCES users(id)
         )
       `,
         err => {
           if (err) reject(err)
-          console.log('[DB] Table "contacts" created or already exists')
+          console.log('Table "contacts" created', 'info', 'initdb')
           resolve()
         }
       )
@@ -90,12 +91,12 @@ async function initDatabase(db) {
           name VARCHAR NOT NULL,
           created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
           FOREIGN KEY (chat_id) REFERENCES chats(id),
-          FOREIGN KEY (owner_id) REFERENCES users(id),
+          FOREIGN KEY (owner_id) REFERENCES users(id)
         )
       `,
         err => {
           if (err) reject(err)
-          console.log('[DB] Table "groups" created or already exists')
+          console.log('Table "groups" created', 'info', 'initdb')
           resolve()
         }
       )
@@ -110,7 +111,7 @@ async function initDatabase(db) {
       `,
         err => {
           if (err) reject(err)
-          console.log('[DB] Table "roles" created or already exists')
+          console.log('Table "roles" created', 'info', 'initdb')
           resolve()
         }
       )
@@ -129,7 +130,7 @@ async function initDatabase(db) {
       `,
         err => {
           if (err) reject(err)
-          console.log('[DB] Table "group_members" created or already exists')
+          console.log('Table "group_members" created', 'info', 'initdb')
           resolve()
         }
       )
@@ -144,7 +145,7 @@ async function initDatabase(db) {
       `,
         err => {
           if (err) reject(err)
-          console.log('[DB] Table "permissions" created or already exists')
+          console.log('Table "permissions" created', 'info', 'initdb')
           resolve()
         }
       )
@@ -154,12 +155,12 @@ async function initDatabase(db) {
           role_id TEXT,
           permission_id TEXT,
           FOREIGN KEY (role_id) REFERENCES roles(id),
-          FOREIGN KEY (permission_id) REFERENCES permissions(id),
+          FOREIGN KEY (permission_id) REFERENCES permissions(id)
         )
       `,
         err => {
           if (err) reject(err)
-          console.log('[DB] Table "role_permissions" created or already exists')
+          console.log('Table "role_permissions" created', 'info', 'initdb')
           resolve()
         }
       )
@@ -176,7 +177,7 @@ async function initDatabase(db) {
       `,
         err => {
           if (err) reject(err)
-          console.log('[DB] Table "queue" created or already exists')
+          console.log('Table "queue" created', 'info', 'initdb')
           resolve()
         }
       )
@@ -185,13 +186,17 @@ async function initDatabase(db) {
 }
 
 if (process.argv[1] === __filename) {
-  console.log('[DB] Database initialization started')
+  new Log('Database initialization started', 'info', 'initdb')
   const db = await database()
   initDatabase(db)
     .then(() => {
-      console.log('[DB] Database initialization complete')
+      new Log('Database initialization complete', 'info', 'initdb')
     })
     .catch(error => {
-      console.error('[DB] Error initializing database:', error.message)
+      throw new Log(
+        `Error initialization database  |  [REASON]  ${error.message}`,
+        'error',
+        'initdb'
+      )
     })
 }
