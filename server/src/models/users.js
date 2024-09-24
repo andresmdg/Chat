@@ -1,183 +1,193 @@
 import { v4 as uuidv4 } from "uuid";
-
 import db from "#db";
 import { Log } from "#utils";
 
-async function add(name, email, password, avatarUrl) {
+// Función auxiliar para crear el objeto de usuario con la URL del avatar
+function formatUser(row) {
+  return {
+    ...row,
+    avatarUrl: row.avatar ? `${process.env.BASE_URL}${row.avatar}` : null,
+  };
+}
+
+async function add(name, username, password, avatarUrl) {
   const database = await db();
   const id = uuidv4();
   const query =
-    "INSERT INTO users (id, name, email, password, avatar) VALUES (?, ?, ?, ?, ?)";
-  return new Promise((resolve, reject) => {
-    database.run(query, [id, name, email, password, avatarUrl], function (err) {
-      if (err) {
-        return reject(err);
-      }
-      const newUser = { id: id, email: email };
-      return resolve(newUser);
+    "INSERT INTO users (id, name, username, password, avatar) VALUES (?, ?, ?, ?, ?)";
+  try {
+    await new Promise((resolve, reject) => {
+      database.run(
+        query,
+        [id, name, username, password, avatarUrl],
+        function (err) {
+          if (err) return reject(err);
+          resolve();
+        }
+      );
     });
-  });
-}
-
-async function getByEmail(email) {
-  const database = await db();
-  const query = "SELECT * FROM users WHERE email = ?";
-  return new Promise((resolve, reject) => {
-    database.get(query, [email], (err, row) => {
-      if (err) {
-        return reject(err);
-      }
-
-      if (!row) {
-        return resolve(null);
-      }
-
-      const user = {
-        ...row,
-        avatarUrl: row.avatar ? `${process.env.BASE_URL}${row.avatar}` : null,
-      };
-
-      return resolve(user);
-    });
-  });
+    const newUser = { id, username };
+    new Log(`User ${username} added successfully`, "info", "access");
+    return newUser;
+  } catch (error) {
+    new Log(
+      `Failed to add user ${username}: ${error.message}`,
+      "error",
+      "access"
+    );
+    throw error;
+  }
 }
 
 async function getByUsername(username) {
   const database = await db();
   const query = "SELECT * FROM users WHERE username = ?";
-  return new Promise((resolve, reject) => {
-    database.get(query, [username], (err, row) => {
-      if (err) {
-        return reject(err);
-      }
-
-      if (!row) {
-        return resolve(null);
-      }
-
-      const user = {
-        ...row,
-        avatarUrl: row.avatar ? `${process.env.BASE_URL}${row.avatar}` : null,
-      };
-
-      return resolve(user);
+  try {
+    const row = await new Promise((resolve, reject) => {
+      database.get(query, [username], (err, row) => {
+        if (err) return reject(err);
+        resolve(row);
+      });
     });
-  });
+
+    if (!row) {
+      new Log(`User ${username} not found`, "warn", "access");
+      return null;
+    }
+
+    return formatUser(row);
+  } catch (error) {
+    new Log(
+      `Failed to get user by username ${username}: ${error.message}`,
+      "error",
+      "access"
+    );
+    throw error;
+  }
 }
 
 async function getByID(id) {
   const database = await db();
   const query = "SELECT * FROM users WHERE id = ?";
-  return new Promise((resolve, reject) => {
-    database.get(query, [id], (err, row) => {
-      if (err) {
-        return reject(err);
-      }
-
-      if (!row) {
-        return resolve(null);
-      }
-
-      const user = {
-        ...row,
-        avatarUrl: row.avatar ? `${process.env.BASE_URL}${row.avatar}` : null,
-      };
-
-      return resolve(user);
+  try {
+    const row = await new Promise((resolve, reject) => {
+      database.get(query, [id], (err, row) => {
+        if (err) return reject(err);
+        resolve(row);
+      });
     });
-  });
+
+    if (!row) {
+      new Log(`User with ID ${id} not found`, "warn", "access");
+      return null;
+    }
+
+    return formatUser(row);
+  } catch (error) {
+    new Log(
+      `Failed to get user by ID ${id}: ${error.message}`,
+      "error",
+      "access"
+    );
+    throw error;
+  }
 }
 
 async function drop(id) {
   const database = await db();
   const user = await getByID(id);
-  if (!user) return Promise.reject(new Error("Usuario no encontrado"));
+  if (!user) throw new Error("User not found");
 
   const deleteQuery = "DELETE FROM users WHERE id = ?";
-  return new Promise((resolve, reject) => {
-    database.run(deleteQuery, [id], (err) => {
-      if (err) {
-        return reject(err);
-      }
-      resolve(true);
+  try {
+    await new Promise((resolve, reject) => {
+      database.run(deleteQuery, [id], (err) => {
+        if (err) return reject(err);
+        resolve();
+      });
     });
-  });
+    new Log(`User ${id} deleted successfully`, "info", "access");
+    return true;
+  } catch (error) {
+    new Log(`Failed to delete user ${id}: ${error.message}`, "error", "access");
+    throw error;
+  }
 }
 
 async function update(id, params) {
   const database = await db();
   const user = await getByID(id);
-  if (!user) return Promise.reject(new Error("Usuario no encontrado"));
+  if (!user) throw new Error("User not found");
+
+  const keys = Object.keys(params);
+  if (keys.length === 0) {
+    throw new Error("No fields to update");
+  }
 
   let query = "UPDATE users SET";
   const queryParams = [];
-  const keys = Object.keys(params);
 
   keys.forEach((key, index) => {
     query += ` ${key} = ?`;
-    if (index < keys.length - 1) {
-      query += ",";
-    }
+    if (index < keys.length - 1) query += ",";
     queryParams.push(params[key]);
   });
 
   query += " WHERE id = ?";
   queryParams.push(id);
 
-  return new Promise((resolve, reject) => {
-    database.run(query, queryParams, (err) => {
-      if (err) {
-        return reject(err);
-      }
-      resolve(true);
+  try {
+    await new Promise((resolve, reject) => {
+      database.run(query, queryParams, (err) => {
+        if (err) return reject(err);
+        resolve();
+      });
     });
-  });
+    new Log(`User ${id} updated successfully`, "info", "access");
+    return true;
+  } catch (error) {
+    new Log(`Failed to update user ${id}: ${error.message}`, "error", "access");
+    throw error;
+  }
 }
 
 async function userOnline(id) {
   const user = await getByID(id);
-
-  if (!user) {
-    return Promise.reject(new Log("User not found", "error", "userOnline"));
-  }
+  if (!user) throw new Error("User not found");
 
   try {
     await update(id, { online: true });
-    new Log(`User ${user.username || id} is now online`, "info", "userOnline");
-    return Promise.resolve(true);
+    new Log(`User ${user.username || id} is online`, "info", "access");
+    return true;
   } catch (error) {
     new Log(
-      `Failed to update user status  |  [REASON] ${error.message}`,
+      `Failed to set user ${id} online: ${error.message}`,
       "error",
       "access"
     );
-    return Promise.reject(error);
+    throw error;
   }
 }
 
 async function userOffline(id) {
   const user = await getByID(id);
-
-  if (!user) {
-    return Promise.reject(new Log("User not found", "error", "userOffline"));
-  }
+  if (!user) throw new Error("User not found");
 
   try {
     await update(id, { online: false });
-    new Log(`User ${id} is now offline`, "info", "userOffline");
-    return Promise.resolve(true);
+    new Log(`User ${id} is offline`, "info", "access");
+    return true;
   } catch (error) {
     new Log(
-      `Failed to update user status  |  [REASON] ${error.message}`,
+      `Failed to set user ${id} offline: ${error.message}`,
       "error",
       "access"
     );
-    return Promise.reject(error);
+    throw error;
   }
 }
 
 export default {
-  getByEmail,
   getByUsername,
   getByID,
   add,

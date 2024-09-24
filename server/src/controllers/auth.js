@@ -15,20 +15,30 @@ passport.use(
   "register",
   new LocalStrategy(
     {
-      usernameField: "email",
+      usernameField: "username",
       passwordField: "password",
       passReqToCallback: true,
     },
-    async (req, email, password, done) => {
+    async (req, username, password, done) => {
       try {
-        const user = await usersModel.getByEmail(email);
-        if (user) {
-          return done(null, false, { message: "Email already taken" });
+        const existingUser = await usersModel.getByUsername(username);
+        if (existingUser) {
+          return done(null, false, { message: "Username already taken" });
         }
-        const avatarUrl = req.file ? `/uploads/avatars/${req.file.filename}` : null;
-        const hashedPassword = bcrypt.hashSync(password, 10);
+
+        const avatarUrl = req.file?.filename
+          ? `/uploads/avatars/${req.file.filename}`
+          : null;
+
+        const hashedPassword = await bcrypt.hash(password, 10);
         const { name } = req.body;
-        const newUser = await usersModel.add(name, email, hashedPassword, avatarUrl);
+        const newUser = await usersModel.add(
+          name,
+          username,
+          hashedPassword,
+          avatarUrl
+        );
+
         return done(null, newUser);
       } catch (error) {
         return done(error);
@@ -41,20 +51,22 @@ passport.use(
   "login",
   new LocalStrategy(
     {
-      usernameField: "email",
+      usernameField: "username",
       passwordField: "password",
     },
-    async (email, password, done) => {
+    async (username, password, done) => {
       try {
-        const user = await usersModel.getByEmail(email);
+        const user = await usersModel.getByUsername(username);
         if (!user) {
-          return done(null, false, { message: "User not found" });
+          return done(null, false, { message: "Invalid username or password" });
         }
-        const validate = bcrypt.compareSync(password, user.password);
-        if (!validate) {
-          return done(null, false, { message: "Wrong password" });
+
+        const isValidPassword = await bcrypt.compare(password, user.password);
+        if (!isValidPassword) {
+          return done(null, false, { message: "Invalid username or password" });
         }
-        return done(null, user, { message: "Logged in successfully" });
+
+        return done(null, user, { message: "Login successful" });
       } catch (error) {
         return done(error);
       }
@@ -69,10 +81,10 @@ passport.use(
       if (user) {
         return done(null, user);
       } else {
-        return done(null, false);
+        return done(null, false, { message: "Token not valid" });
       }
-    } catch (err) {
-      return done(err, false);
+    } catch (error) {
+      return done(error, false);
     }
   })
 );
