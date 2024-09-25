@@ -28,7 +28,7 @@ export default function Login() {
       if (error) {
         setError(error.message);
       }
-      if (data) {
+      if (data && data.token) {
         Auth.AccessToken.set(data.token);
         await login(data.token);
       }
