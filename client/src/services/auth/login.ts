@@ -6,16 +6,16 @@ import { loginResponseValidator } from '@/utils/schemas';
 
 interface LoginCredentials {
   password: string;
-  email: string
+  username: string
 }
 
 type Response = Yup.InferType<typeof loginResponseValidator>
 
 export const login = async (credentials: LoginCredentials): Promise<[Error | null, Response | null]> => {
-  const { password, email } = credentials;
+  const { password, username } = credentials;
   const user = {
     password,
-    email
+    username
   }
 
   try {
