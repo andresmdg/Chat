@@ -18,6 +18,6 @@ export const userResponseSchema = Yup.object({
 
 export const loginResponseValidator = Yup.object({
   success: Yup.boolean().required(),
-  token: Yup.string().required(),
+  token: Yup.string(),
   message: Yup.string().required()
 });
