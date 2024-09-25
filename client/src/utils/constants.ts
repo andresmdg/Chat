@@ -11,5 +11,6 @@ export const ENV = {
   },
   USER: {
     GET_USER: (id: string) => `${API_BASE_URL}/api/users/${id}`,
+    GET_BY_USERNAME: (username: string) => `${API_BASE_URL}/api/users/username/${username}`,
   }
 }

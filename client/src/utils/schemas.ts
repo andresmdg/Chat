@@ -11,7 +11,6 @@ export const userResponseSchema = Yup.object({
   user: Yup.object({
     id: Yup.string().required(),
     name: Yup.string().required(),
-    email: Yup.string().required(),
     username: Yup.string().required().nullable(),
     avatarUrl: Yup.string().required().nullable()
   })

@@ -5,7 +5,7 @@ import {ENV} from '@/utils/constants';
 interface SignupCredentials {
   name: string;
   password: string;
-  email: string
+  username: string
 }
 
 const responseValidator = Yup.object({
@@ -16,12 +16,12 @@ const responseValidator = Yup.object({
 type Response = Yup.InferType<typeof responseValidator>
 
 export const signup = async (credentials: SignupCredentials): Promise<[Error | null, Response | null]> => {
-  const { name, password, email } = credentials;
+  const { name, password, username } = credentials;
 
   const user = {
     name,
     password,
-    email
+    username
   }
 
   try {

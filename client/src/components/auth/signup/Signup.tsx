@@ -3,13 +3,14 @@ import { ButtonForm } from "@/components/Buttons";
 import { Input } from "@/components/Input";
 import { NavLink, useNavigate } from "react-router-dom";
 import { useFormik } from 'formik'
+import { useDebounce } from '@uidotdev/usehooks';
 import { signupSchema } from "./schema";
 import { Auth } from "@/services/auth";
 
 
 const initialValues = {
   name: '',
-  email: '',
+  username: '',
   password: '',
   confirmPassword: ''
 };
@@ -18,13 +19,13 @@ export default function Signup() {
   const [loading, setLoading] = useState(false)
   const navigate = useNavigate();
 
-
   const formik = useFormik({
     initialValues,
     validationSchema: signupSchema(),
     validateOnChange: false,
     onSubmit: async (values) => {
       setLoading(true);
+
       const [signupError] = await Auth.signup(values);
 
       if (signupError) {
@@ -38,6 +39,18 @@ export default function Signup() {
   })
   const { errors, values } = formik;
 
+  const debouncedUsername = useDebounce(values.username, 500);
+
+  useEffect(() => {
+    if (debouncedUsername) {
+      Auth.checkUsername(debouncedUsername).then((res) => {
+        if (res) {
+          setError('username already exists')
+        }
+      })
+    }
+  }, [debouncedUsername])
+
   const handleChangeText = ( value: string, field: keyof typeof initialValues) => {
     setError('');
     formik.setFieldValue(field, value);
@@ -48,14 +61,16 @@ export default function Signup() {
   }
 
   useEffect(() => {
-    if (errors.email) return setError(errors.email);
 
-    if (errors.email) return setError(errors.email);
+    if (errors.username && errors.name && errors.password) {
+      return setError('Complete todos los campos');
+    }
+    if (errors.username) return setError(errors.username);
 
     if (errors.password || errors.confirmPassword) {
       return setError(errors.password || errors.confirmPassword)
     }
-  }, [errors.email, errors.password, errors.confirmPassword])
+  }, [errors.username, errors.password, errors.confirmPassword, errors.name])
 
   return (
     <form>
@@ -63,24 +78,28 @@ export default function Signup() {
         <div className=' grid gap-5 w-full'>
           <Input
             type='text'
+            className={`${errors.name && 'border-red-500'}`}
             placeholder='Name'
             value={values.name}
             onChange={({target}) => handleChangeText(target.value, 'name')}
           />
           <Input
-            type='email'
-            placeholder='Email'
-            value={values.email}
-            onChange={({target}) => handleChangeText(target.value, 'email')}
+            type='text'
+            className={`${errors.username && 'border-red-500'}`}
+            placeholder='Username'
+            value={values.username}
+            onChange={({target}) => handleChangeText(target.value, 'username')}
           />
           <Input
             type='password'
+            className={`${errors.password && 'border-red-500'}`}
             placeholder='Password'
             value={values.password}
             onChange={({target}) => handleChangeText(target.value, 'password')}
           />
           <Input
             type='password'
+            className={`${errors.confirmPassword && 'border-red-500'}`}
             placeholder='Confirm password'
             value={values.confirmPassword}
             onChange={({target}) => handleChangeText(target.value, 'confirmPassword')}

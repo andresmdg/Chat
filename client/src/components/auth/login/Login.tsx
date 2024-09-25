@@ -8,7 +8,7 @@ import { Auth } from "@/services/auth";
 import { useAuth } from "@/components/hooks/useAuth";
 
 const initialValues = {
-  email: '',
+  username: '',
   password: '',
 }
 export default function Login() {
@@ -48,27 +48,29 @@ export default function Login() {
   }
 
   useEffect(() => {
-    if (errors.email) return setError(errors.email);
+    if (errors.username) return setError(errors.username);
 
-    if (errors.email) return setError(errors.email);
+    if (errors.username) return setError(errors.username);
 
     if (errors.password) {
       return setError(errors.password)
     }
-  }, [errors.email, errors.password])
+  }, [errors.username, errors.password])
 
   return (
     <form>
       <div className='grid p-6 gap-5 w-96 rounded-2xl bg-[#FFCB71] '>
         <div className=' grid gap-5 w-full'>
           <Input
-            type='email'
-            placeholder='Email'
-            value={values.email}
-            onChange={({target}) => handleChangeText(target.value, 'email')}
+            type='text'
+            className={`${errors.username && 'border-red-500'}`}
+            placeholder='Username'
+            value={values.username}
+            onChange={({target}) => handleChangeText(target.value, 'username')}
           />
           <Input
             type='password'
+            className={`${errors.password && 'border-red-500'}`}
             placeholder='Password'
             value={values.password}
             onChange={({target}) => handleChangeText(target.value, 'password')}
