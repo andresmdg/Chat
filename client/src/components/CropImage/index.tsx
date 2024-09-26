@@ -1,6 +1,7 @@
-import { cropCanvasImage, dataURLToFile } from '@/utils/cropCanvasImage';
+import { cropCanvasImage } from '@/utils/cropCanvasImage';
 import { useState } from 'react';
-import ReactCrop, { centerCrop, Crop, makeAspectCrop } from 'react-image-crop'
+import ReactCrop, { centerCrop, Crop, makeAspectCrop } from 'react-image-crop';
+import 'react-image-crop/dist/ReactCrop.css'
 
 interface Props {
   imageUrl: string,
@@ -21,7 +22,6 @@ export default function CropImage({imageUrl, imgElement, loading, setImgElement,
     width: MIN_DIMENTION,
     height: MIN_DIMENTION,
   })
-
 
   // load file image
   const onImageLoad = (e: React.SyntheticEvent<HTMLImageElement, Event>) => {
@@ -45,10 +45,12 @@ export default function CropImage({imageUrl, imgElement, loading, setImgElement,
     const canvas = document.createElement('canvas');
     if (!imgElement) return;
 
-    const dataURL = cropCanvasImage(canvas, imgElement, crop)
+    const blobFile = await cropCanvasImage(canvas, imgElement, crop);
 
-    const filename = `${crypto.randomUUID()}.jpg`
-    const newFile = await dataURLToFile(dataURL, filename);
+    const filename = `${Date.now()}.jpg`;
+
+    const newFile = new File([blobFile], filename, {type: blobFile.type})
+
     setFile(newFile);
   }
 

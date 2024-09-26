@@ -1,9 +1,7 @@
 import { useRef, useState } from 'react';
-import 'react-image-crop/dist/ReactCrop.css'
 import { useAuth } from "../hooks/useAuth";
 import Modal from '../Modal';
 import CropImage from '../CropImage';
-import { readFileImage } from '@/utils/readFileImg';
 import { Profile } from '@/services/profile';
 
 export default function InfoAccount(params: {
@@ -27,26 +25,24 @@ export default function InfoAccount(params: {
       setShowModal(true);
       const selectedFile =  e.target.files[0];
 
-      readFileImage(selectedFile, setImageUrl)
-      // setFile(e.target.files[0]);
+      const src = URL.createObjectURL(selectedFile);
+      setImageUrl(src);
       e.target.files = null;
     }
   }
 
   const handleSetFile = async (newFile: File) => {
     setLoading(true);
-    // setFile(newFile);
     setShowModal(false);
-    readFileImage(newFile, (data) => {
-      if (imgRef.current) imgRef.current.src = data;
-    })
+    const dataUrl = URL.createObjectURL(newFile);
+    if (imgRef.current) imgRef.current.src = dataUrl;
+
     const [error, data] = await Profile.updatePhoto(newFile, accessToken);
 
     console.log({error, data});
 
-    setLoading(false)
-
     setImageUrl('')
+    setLoading(false)
   }
 
   return (
