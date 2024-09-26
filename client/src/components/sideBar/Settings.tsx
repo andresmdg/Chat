@@ -21,8 +21,6 @@ export default function Settings({
       max-2xl:w-96
       absolute
       inset-0
-      overflow-y-auto
-      scroll_stile
       ${settings ? "grid": "hidden"}
       ${white ? "bg-[#f3f3f3]" : "bg-light-yellow"}
     `}>
@@ -38,64 +36,70 @@ export default function Settings({
           <IoIosArrowBack />
         </button>
       </div>
-      <div className='max-sm:flex max-sm:justify-between max-sm:items-center max-sm:gap-4'>
-        <InfoAccount
-          white={white}
-          name='Name'
-          email='user@mail.com'
-          userName='User'
-        />
+
+      <div className="overflow-y-auto scroll_stile pr-1 grid gap-2">
+
+        <div className='max-sm:flex max-sm:justify-between max-sm:items-center max-sm:gap-4'>
+          <InfoAccount
+            white={white}
+            name='Name'
+            email='user@mail.com'
+            userName='User'
+          />
+        </div>
+
+        <div className='grid sidebar_Button h-full content-between gap-4'>
+          <section
+            className={`grid gap-4 h-fit p-2 rounded-lg ${
+              white ? "bg-[#ffffff]" : "bg-yellow-50"
+            }`}>
+            <ButtonSetting
+              onclick={() => console.log("")}
+              texto='Account'
+              image='/icons/Account.svg'
+            />
+            <ButtonSetting
+              onclick={() => console.log("")}
+              texto='Messages'
+              image='/icons/Message.svg'
+            />
+            <ButtonSetting
+              onclick={() => console.log("")}
+              texto='Info'
+              image='/icons/Info.svg'
+            />
+          </section>
+          {/*  Section themes */}
+
+          <section
+            className={`${
+              white ? "bg-[#ffffff]" : "bg-yellow-50"
+            } p-2 rounded-lg text-center`}>
+            <p>Temas</p>
+            <div className='flex gap-2'>
+              <button onClick={changeTheme} className='p-2'>
+                <div className='rounded-full h-6 w-6 bg-white border border-black' />
+              </button>
+            </div>
+          </section>
+          <section
+            className={`grid gap-4 p-2 h-fit rounded-lg ${
+              white ? "bg-white" : "bg-yellow-50"
+            }`}>
+            <ButtonSetting
+              onclick={() => console.log("")}
+              texto='Change Account'
+              image='/icons/Change.svg'
+            />
+            <LogoutButton
+              texto='Logout'
+              image='/icons/Exit.svg'
+            />
+          </section>
+        </div>
+
       </div>
 
-      <div className='grid sidebar_Button h-full content-between gap-4'>
-        <section
-          className={`grid gap-4 h-fit p-2 rounded-lg ${
-            white ? "bg-[#ffffff]" : "bg-yellow-50"
-          }`}>
-          <ButtonSetting
-            onclick={() => console.log("")}
-            texto='Account'
-            image='/icons/Account.svg'
-          />
-          <ButtonSetting
-            onclick={() => console.log("")}
-            texto='Messages'
-            image='/icons/Message.svg'
-          />
-          <ButtonSetting
-            onclick={() => console.log("")}
-            texto='Info'
-            image='/icons/Info.svg'
-          />
-        </section>
-        {/*  Section themes */}
-
-        <section
-          className={`${
-            white ? "bg-[#ffffff]" : "bg-yellow-50"
-          } p-2 rounded-lg text-center`}>
-          <p>Temas</p>
-          <div className='flex gap-2'>
-            <button onClick={changeTheme} className='p-2'>
-              <div className='rounded-full h-6 w-6 bg-white border border-black' />
-            </button>
-          </div>
-        </section>
-        <section
-          className={`grid gap-4 p-2 h-fit rounded-lg ${
-            white ? "bg-white" : "bg-yellow-50"
-          }`}>
-          <ButtonSetting
-            onclick={() => console.log("")}
-            texto='Change Account'
-            image='/icons/Change.svg'
-          />
-          <LogoutButton
-            texto='Logout'
-            image='/icons/Exit.svg'
-          />
-        </section>
-      </div>
     </div>
   );
 }
