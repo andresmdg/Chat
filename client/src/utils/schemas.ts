@@ -8,7 +8,7 @@ export const decodeTokenSchema = Yup.object({
 
 export const userResponseSchema = Yup.object({
   success: Yup.boolean().required(),
-  user: Yup.object({
+  data: Yup.object({
     id: Yup.string().required(),
     name: Yup.string().required(),
     username: Yup.string().required().nullable(),
@@ -19,5 +19,16 @@ export const userResponseSchema = Yup.object({
 export const loginResponseValidator = Yup.object({
   success: Yup.boolean().required(),
   token: Yup.string(),
+  message: Yup.string().required()
+});
+
+export const updateResponseValidator = Yup.object({
+  success: Yup.boolean().required(),
+  data: Yup.object({
+    id: Yup.string().required(),
+    name: Yup.string().required(),
+    username: Yup.string().required().nullable(),
+    avatarUrl: Yup.string().required().nullable()
+  }),
   message: Yup.string().required()
 });

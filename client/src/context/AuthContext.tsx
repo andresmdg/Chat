@@ -4,7 +4,7 @@ import { User } from '@/services/user'
 import { User as UserType } from '@/interfaces/interfaces'
 
 interface AuthValues {
-  accessToken: string | null,
+  accessToken: string,
   user: UserType | null,
   login: (accesToken: string) => Promise<void>,
   logout: () => void,
@@ -12,7 +12,7 @@ interface AuthValues {
 }
 
 const initialValues: AuthValues = {
-  accessToken: null,
+  accessToken: '',
   user: null,
   login: async () => {},
   logout: () => {},
@@ -22,7 +22,7 @@ export const AuthContext = createContext(initialValues)
 
 export function AuthProvider ({children}: {children: React.ReactNode}) {
   const [user, setUser] = useState<UserType | null>(null);
-  const [token, setToken] = useState<string | null>(null);
+  const [token, setToken] = useState<string>('');
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -43,7 +43,7 @@ export function AuthProvider ({children}: {children: React.ReactNode}) {
 
         if (error) logout();
 
-        if (data) {
+        if (data?.token) {
           setToken(data.token);
           await Auth.AccessToken.set(data.token);
         }
@@ -84,7 +84,7 @@ export function AuthProvider ({children}: {children: React.ReactNode}) {
     Auth.AccessToken.remove();
     User.UserStorage.remove();
     setUser(null)
-    setToken(null)
+    setToken('')
     setLoading(false)
   }
 

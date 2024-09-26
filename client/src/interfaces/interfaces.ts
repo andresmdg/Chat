@@ -25,7 +25,6 @@ export interface Profile {
 export interface User {
   id: string,
   name: string,
-  email: string,
   username: string | null,
   avatarUrl: string | null
 }

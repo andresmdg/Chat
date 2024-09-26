@@ -1,4 +1,10 @@
+import { useRef, useState } from 'react';
+import 'react-image-crop/dist/ReactCrop.css'
 import { useAuth } from "../hooks/useAuth";
+import Modal from '../Modal';
+import CropImage from '../CropImage';
+import { readFileImage } from '@/utils/readFileImg';
+import { Profile } from '@/services/profile';
 
 export default function InfoAccount(params: {
   name: string;
@@ -7,43 +13,102 @@ export default function InfoAccount(params: {
   white: boolean;
 }) {
 
-  const {user} = useAuth();
+  const {user, accessToken} = useAuth();
+  // const [file, setFile] = useState<File>();
+  const [imageUrl, setImageUrl] = useState('');
+  const [imgElement, setImgElement] = useState<HTMLImageElement | null>(null);
+  const [showModal, setShowModal] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  const imgRef = useRef<HTMLImageElement>(null)
+
+  const setFileData = (e: React.ChangeEvent<HTMLInputElement> | null) => {
+    if (e?.target?.files && e.target.files.length > 0) {
+      setShowModal(true);
+      const selectedFile =  e.target.files[0];
+
+      readFileImage(selectedFile, setImageUrl)
+      // setFile(e.target.files[0]);
+      e.target.files = null;
+    }
+  }
+
+  const handleSetFile = async (newFile: File) => {
+    setLoading(true);
+    // setFile(newFile);
+    setShowModal(false);
+    readFileImage(newFile, (data) => {
+      if (imgRef.current) imgRef.current.src = data;
+    })
+    const [error, data] = await Profile.updatePhoto(newFile, accessToken);
+
+    console.log({error, data});
+
+    setLoading(false)
+
+    setImageUrl('')
+  }
 
   return (
     <div
-      className={`w-full sidebar_Info h-fit flex-col justify-start items-center gap-6 inline-flex p-2 rounded-lg ${
+      className={`w-full sidebar_Info h-fit flex-col justify-start items-center gap-6 inline-flex px-2 py-4 rounded-lg ${
         params.white ? "bg-[#ffffff]" : "bg-yellow-50"
       }`}>
       <div className='flex justify-around flex-col w-full items-center gap-3'>
-        <div className='w-24 h-24 aspect-square justify-center items-center flex'>
+        <div className='relative w-32 h-32 overflow-hidden aspect-square justify-center items-center flex'>
           <img
-            className='w-24 h-24 rounded-full border-2 border-teal-900'
-            src='https://via.placeholder.com/100x98'
+            ref={imgRef}
+            className='w-32 h-32 rounded-full border-2 border-teal-900'
+            src={user?.avatarUrl ?? '/no-profile-photo.jpg'}
           />
+          <button
+            onClick={() => setShowModal(true)}
+            title="Change Photo"
+            className="hover:opacity-100 opacity-0 absolute font-medium text-white text-center rounded-full p-2 grid place-content-center w-full h-full bg-zinc-700/60"
+          >
+            CHANGE PHOTO
+          </button>
         </div>
         <div className='w-full flex-col  text-center justify-start gap-2 inline-flex'>
-          <div className="self-stretch h-4 text-slate-400 text-base font-normal font-['Inter']">
+          <h4 className="self-stretch text-lg font-semibold h-4 text-slate-400">
             {user?.name}
-          </div>
+          </h4>
 
-          {
-            user?.username && (
-              <p className="self-stretch h-4 text-slate-400 text-base font-normal font-['Inter']">
-                { `<${user?.username}>`}
-              </p>
-            )
-          }
-          <p className="text-slate-400 text-base font-normal font-['Inter']">
-            {`<${user?.email}>`}
+          <p className="self-stretch h-4 text-slate-400 text-base font-normal">
+            @{user?.username}
           </p>
         </div>
+
       </div>
-      <div className=' h-6 justify-center items-center gap-4 inline-flex w-full py-1 rounded-lg group'>
-        <div className='w-2 h-2 bg-green-500 rounded-full animate-ping' />
-        <p className="w-20 h-4 text-slate-400 text-base font-bold font-['Roboto']">
-          En linea
-        </p>
-      </div>
+      <Modal open={showModal} setOpen={setShowModal}>
+        <div className='flex flex-col gap-4'>
+          <label
+            htmlFor='photo-profile'
+            className="py-1 px-3 cursor-pointer flex w-fit rounded-2xl border-blue-400 font-medium text-blue-400 border-[2px] border-solid hover:bg-blue-400 hover:text-white"
+          >
+            <input
+              id='photo-profile'
+              className='hidden'
+              type="file"
+              accept='image/*'
+              onChange={(e) => setFileData(e)}
+              multiple={false}
+              />
+            Select Photo
+          </label>
+
+          {imageUrl ? (
+            <CropImage
+              imageUrl={imageUrl}
+              imgElement={imgElement}
+              setFile={handleSetFile}
+              loading={loading}
+              setImgElement={setImgElement}
+            />
+          ) : <p className='text-center mt-[35%] text-blue-400'>You have not yet selected an image</p>
+          }
+        </div>
+      </Modal>
     </div>
   );
 }

@@ -22,6 +22,7 @@ export default function Settings({
       absolute
       inset-0
       overflow-y-auto
+      scroll_stile
       ${settings ? "grid": "hidden"}
       ${white ? "bg-[#f3f3f3]" : "bg-light-yellow"}
     `}>
