@@ -3,6 +3,7 @@ import { useAuth } from "../hooks/useAuth";
 import Modal from '../Modal';
 import CropImage from '../CropImage';
 import { Profile } from '@/services/profile';
+import noProfilePhoto from '/no-profile-photo.jpg';
 
 export default function InfoAccount(params: {
   name: string;
@@ -34,15 +35,27 @@ export default function InfoAccount(params: {
   const handleSetFile = async (newFile: File) => {
     setLoading(true);
     setShowModal(false);
-    const dataUrl = URL.createObjectURL(newFile);
-    if (imgRef.current) imgRef.current.src = dataUrl;
 
     const [error, data] = await Profile.updatePhoto(newFile, accessToken);
 
-    console.log({error, data});
+    const dataUrl = URL.createObjectURL(newFile);
+
+    console.log(data);
+
+    if (!imgRef.current) return;
+    imgRef.current.src = dataUrl
+
+
+    if (error) {
+      imgRef.current.src = noProfilePhoto
+    }
 
     setImageUrl('')
     setLoading(false)
+  }
+
+  const handleErrorImage = () => {
+    if (imgRef.current) imgRef.current.src = noProfilePhoto;
   }
 
   return (
@@ -54,8 +67,9 @@ export default function InfoAccount(params: {
         <div className='relative w-32 h-32 overflow-hidden aspect-square justify-center items-center flex'>
           <img
             ref={imgRef}
-            className='w-32 h-32 rounded-full border-2 border-teal-900'
-            src={user?.avatarUrl ?? '/no-profile-photo.jpg'}
+            className='w-32 h-32 rounded-full border-2 border-violet-500'
+            src={user?.avatar ?? ''}
+            onError={handleErrorImage}
           />
           <button
             onClick={() => setShowModal(true)}
