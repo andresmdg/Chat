@@ -8,7 +8,7 @@ export const checkUsername = async (username: string) => {
 
     const validateUser = await userResponseSchema.validate(data);
 
-    if (validateUser.user) return true;
+    if (validateUser.data) return true;
     return false;
   } catch {
     return false;
