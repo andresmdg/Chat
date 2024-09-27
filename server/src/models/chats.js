@@ -1,10 +1,13 @@
+// Modules
+import { v4 as uuidv4 } from 'uuid'
+
 // Imports
 import database from '#db'
-import { messagesModel } from '#models'
+import { Log } from '#utils'
 
 // Model
 const Chats = {
-  createChat: async (chatId, isGroup = false) => {
+  create: async (isGroup, chatId = uuidv4()) => {
     const db = await database()
     return new Promise((resolve, reject) => {
       const query = `
@@ -12,9 +15,50 @@ const Chats = {
       `
       db.run(query, [chatId, isGroup], function (err) {
         if (err) {
+          new Log(
+            `Failed to create chat  |  [CHAT_ID] ${chatId}  |  [REASON]  ${err.message}`,
+            'error',
+            'access'
+          )
           return reject(err)
         }
+        new Log(
+          `Chat created successfully  |  [CHAT_ID]  ${chatId}  |  [IS_GROUP]  ${isGroup}`,
+          'info',
+          'access'
+        )
         resolve(chatId)
+      })
+    })
+  },
+
+  getById: async chatId => {
+    const db = await database()
+    return new Promise((resolve, reject) => {
+      const query = `
+        SELECT * FROM chats WHERE id = ?
+      `
+      db.get(query, [chatId], (err, row) => {
+        if (err) {
+          new Log(
+            `Error checking chat existence  |  [CHAT_ID]  ${chatId}  |  [REASON]  ${err.message}`,
+            'error',
+            'access'
+          )
+          return reject(err)
+        }
+
+        if (row) {
+          new Log(
+            `Chat retrieved successfully  |  [CHAT_ID]  ${chatId}  |  [CONTENT]  ${JSON.stringify(row)}`,
+            'info',
+            'access'
+          )
+        } else {
+          new Log(`Chat not found  |  [CHAT_ID]  ${chatId}`, 'warn', 'access')
+        }
+
+        resolve(row || null)
       })
     })
   },
@@ -29,100 +73,31 @@ const Chats = {
       `
       db.all(query, [userId], (err, rows) => {
         if (err) {
+          new Log(
+            `Failed to retrieve user chats  |  [USER_ID]  ${userId}  |  [REASON]  ${err.message}`,
+            'error',
+            'access'
+          )
           return reject(err)
         }
         const chatIds = rows.map(row => row.chat_id)
-        resolve(chatIds.length > 0 ? chatIds : null)
-      })
-    })
-  },
-
-  addUserToChat: async (userId, chatId) => {
-    const db = await database()
-    return new Promise((resolve, reject) => {
-      const query = `
-        INSERT INTO user_chats (id, user_id, chat_id)
-        VALUES (?, ?, ?)
-      `
-      const userChatId = `${userId}-${chatId}`
-      db.run(query, [userChatId, userId, chatId], function (err) {
-        if (err) {
-          return reject(err)
+        if (chatIds.length === 0) {
+          new Log(
+            `No chats found for user  |  [USER_ID]  ${userId}`,
+            'warn',
+            'access'
+          )
+          resolve(null)
+        } else {
+          new Log(
+            `User chats retrieved successfully  |  [USER_ID]  ${userId}  |  [CHAT_IDS]  ${chatIds.join(', ')}`,
+            'info',
+            'access'
+          )
+          resolve(chatIds)
         }
-        resolve(userChatId)
       })
     })
-  },
-
-  getChatUsers: async chatId => {
-    const db = await database()
-    return new Promise((resolve, reject) => {
-      const query = `
-        SELECT user_id
-        FROM group_members
-        WHERE chat_id = ?
-      `
-      db.all(query, [chatId], (err, rows) => {
-        if (err) {
-          return reject(err)
-        }
-        resolve(rows.length > 0 ? rows.map(row => row.user_id) : null)
-      })
-    })
-  },
-
-  removeUserFromChat: async (userId, chatId) => {
-    const db = await database()
-    return new Promise((resolve, reject) => {
-      const query = `
-        DELETE FROM group_members
-        WHERE user_id = ? AND chat_id = ?
-      `
-      db.run(query, [userId, chatId], function (err) {
-        if (err) {
-          return reject(err)
-        }
-        resolve(this.changes > 0 ? true : null)
-      })
-    })
-  },
-
-  getChatMessages: async chatId => {
-    try {
-      const messages = await messagesModel.getMessagesByChatId(chatId)
-      return messages.length > 0 ? messages : null
-    } catch (err) {
-      throw err
-    }
-  },
-
-  sendMessageToChat: async (chatId, senderId, body, status = 'sent') => {
-    try {
-      const db = await database()
-      const chatExists = await new Promise((resolve, reject) => {
-        const query = `
-          SELECT 1 FROM chats WHERE id = ?
-        `
-        db.get(query, [chatId], (err, row) => {
-          if (err) {
-            return reject(err)
-          }
-          resolve(row ? true : false)
-        })
-      })
-      if (!chatExists) {
-        return null
-      }
-      const messageId = await messagesModel.createMessage(
-        chatId,
-        senderId,
-        body,
-        status
-      )
-      return messageId
-    } catch (err) {
-      throw err
-    }
   }
 }
 
