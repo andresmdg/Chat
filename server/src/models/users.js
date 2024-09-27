@@ -5,15 +5,6 @@ import { v4 as uuidv4 } from 'uuid'
 import db from '#db'
 import { Log } from '#utils'
 
-// Variables or definitions
-
-function formatUser(row) {
-  return {
-    ...row,
-    avatarUrl: row.avatar ? `${process.env.BASE_URL}${row.avatar}` : null
-  }
-}
-
 // Model
 
 const Users = {
@@ -33,7 +24,7 @@ const Users = {
           }
         )
       })
-      const newUser = { id, username }
+      const newUser = await Users.getByID(id)
       new Log(`User ${username} added successfully`, 'info', 'access')
       return newUser
     } catch (error) {
@@ -42,6 +33,7 @@ const Users = {
         'error',
         'access'
       )
+      return null
     }
   },
 
@@ -61,13 +53,14 @@ const Users = {
         return null
       }
 
-      return formatUser(row)
+      return row
     } catch (error) {
       new Log(
         `Failed to get user by username  |  [USERNAME]  ${username}  |  [REASON]  ${error.message}`,
         'error',
         'access'
       )
+      return null
     }
   },
 
@@ -87,13 +80,14 @@ const Users = {
         return null
       }
 
-      return formatUser(row)
+      return row
     } catch (error) {
       new Log(
         `Failed to get user  |  [ID]  ${id}  |  [REASON]  ${error.message}`,
         'error',
         'access'
       )
+      return null
     }
   },
 
@@ -118,6 +112,7 @@ const Users = {
         'error',
         'access'
       )
+      return null
     }
   },
 
@@ -150,14 +145,17 @@ const Users = {
           resolve()
         })
       })
+      const updatedUser = await Users.getByID(id)
+
       new Log(`User updated successfully  |  [ID]  ${id}`, 'info', 'access')
-      return true
+      return updatedUser
     } catch (error) {
       new Log(
         `Failed to update user  |  [ID]  ${id}  |  [REASON]  ${error.message}`,
         'error',
         'access'
       )
+      return null
     }
   },
 
@@ -188,6 +186,7 @@ const Users = {
         'error',
         'access'
       )
+      return null
     }
   },
 
@@ -218,6 +217,7 @@ const Users = {
         'error',
         'access'
       )
+      return null
     }
   }
 }
