@@ -17,7 +17,7 @@ function formatUser(row) {
 // Model
 
 const Users = {
-  add: async (name, username, password, avatarUrl) => {
+  add: async (name, username, password, avatarUrl = null) => {
     const database = await db()
     const id = uuidv4()
     const query =
@@ -38,13 +38,13 @@ const Users = {
       return newUser
     } catch (error) {
       new Log(
-        `Failed to add user ${username}: ${error.message}`,
+        `Failed to add user  |  [USERNAME]  ${username}  |  [REASON]  ${error.message}`,
         'error',
         'access'
       )
-      throw error
     }
   },
+
   getByUsername: async username => {
     const database = await db()
     const query = 'SELECT * FROM users WHERE username = ?'
@@ -57,20 +57,20 @@ const Users = {
       })
 
       if (!row) {
-        new Log(`User ${username} not found`, 'warn', 'access')
+        new Log(`User not found  |  [USERNAME]  ${username}`, 'warn', 'access')
         return null
       }
 
       return formatUser(row)
     } catch (error) {
       new Log(
-        `Failed to get user by username ${username}: ${error.message}`,
+        `Failed to get user by username  |  [USERNAME]  ${username}  |  [REASON]  ${error.message}`,
         'error',
         'access'
       )
-      throw error
     }
   },
+
   getByID: async id => {
     const database = await db()
     const query = 'SELECT * FROM users WHERE id = ?'
@@ -83,23 +83,23 @@ const Users = {
       })
 
       if (!row) {
-        new Log(`User with ID ${id} not found`, 'warn', 'access')
+        new Log(`User not found  |  [ID]  ${id}`, 'warn', 'access')
         return null
       }
 
       return formatUser(row)
     } catch (error) {
       new Log(
-        `Failed to get user by ID ${id}: ${error.message}`,
+        `Failed to get user  |  [ID]  ${id}  |  [REASON]  ${error.message}`,
         'error',
         'access'
       )
-      throw error
     }
   },
+
   drop: async id => {
     const database = await db()
-    const user = await getByID(id)
+    const user = await Users.getByID(id)
     if (!user) throw new Error('User not found')
 
     const deleteQuery = 'DELETE FROM users WHERE id = ?'
@@ -110,20 +110,20 @@ const Users = {
           resolve()
         })
       })
-      new Log(`User ${id} deleted successfully`, 'info', 'access')
+      new Log(`User deleted successfully  |  [ID]  ${id}`, 'info', 'access')
       return true
     } catch (error) {
       new Log(
-        `Failed to delete user ${id}: ${error.message}`,
+        `Failed to delete user  |  [ID]  ${id}  |  [REASON]  ${error.message}`,
         'error',
         'access'
       )
-      throw error
     }
   },
+
   update: async (id, params) => {
     const database = await db()
-    const user = await getByID(id)
+    const user = await Users.getByID(id)
     if (!user) throw new Error('User not found')
 
     const keys = Object.keys(params)
@@ -150,49 +150,74 @@ const Users = {
           resolve()
         })
       })
-      new Log(`User ${id} updated successfully`, 'info', 'access')
+      new Log(`User updated successfully  |  [ID]  ${id}`, 'info', 'access')
       return true
     } catch (error) {
       new Log(
-        `Failed to update user ${id}: ${error.message}`,
+        `Failed to update user  |  [ID]  ${id}  |  [REASON]  ${error.message}`,
         'error',
         'access'
       )
-      throw error
     }
   },
+
   userOnline: async id => {
-    const user = await getByID(id)
+    const user = await Users.getByID(id)
     if (!user) throw new Error('User not found')
 
+    if (user.online) {
+      new Log(
+        `User already online  |  [USERNAME]  ${user.username}`,
+        'info',
+        'access'
+      )
+      return 0 // No se realiza ningún cambio si ya está online
+    }
+
     try {
-      await update(id, { online: true })
-      new Log(`User ${user.username || id} is online`, 'info', 'access')
-      return true
+      await Users.update(id, { online: true })
+      new Log(
+        `User is now online  |  [USERNAME]  ${user.username}`,
+        'info',
+        'access'
+      )
+      return 1 // Retorna 1 si se actualizó el estado a online
     } catch (error) {
       new Log(
-        `Failed to set user ${id} online: ${error.message}`,
+        `Failed to set user online  |  [ID]  ${id}  |  [REASON]  ${error.message}`,
         'error',
         'access'
       )
-      throw error
     }
   },
+
   userOffline: async id => {
-    const user = await getByID(id)
+    const user = await Users.getByID(id)
     if (!user) throw new Error('User not found')
 
+    if (!user.online) {
+      new Log(
+        `User already offline  |  [USERNAME]  ${user.username}`,
+        'info',
+        'access'
+      )
+      return 0 // No se realiza ningún cambio si ya está offline
+    }
+
     try {
-      await update(id, { online: false })
-      new Log(`User ${id} is offline`, 'info', 'access')
-      return true
+      await Users.update(id, { online: false })
+      new Log(
+        `User is now offline  |  [USERNAME]  ${user.username}`,
+        'info',
+        'access'
+      )
+      return 1 // Retorna 1 si se actualizó el estado a offline
     } catch (error) {
       new Log(
-        `Failed to set user ${id} offline: ${error.message}`,
+        `Failed to set user offline  |  [ID]  ${id}  |  [REASON]  ${error.message}`,
         'error',
         'access'
       )
-      throw error
     }
   }
 }
