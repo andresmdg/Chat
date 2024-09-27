@@ -8,7 +8,7 @@ import { usersModel } from '#models'
 const router = Router()
 
 // Routes
-router.get('/email/:email', async (req, res) => {
+/* router.get('/email/:email', async (req, res) => {
   try {
     const { email } = req.params
     const user = await usersModel.getByEmail(email)
@@ -20,7 +20,7 @@ router.get('/email/:email', async (req, res) => {
   } catch (err) {
     res.status(400).json({ success: false, message: err.message })
   }
-})
+}) */
 
 router.get('/username/:username', async (req, res) => {
   try {
