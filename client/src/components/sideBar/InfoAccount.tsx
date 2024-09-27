@@ -4,6 +4,7 @@ import Modal from '../Modal';
 import CropImage from '../CropImage';
 import { Profile } from '@/services/profile';
 import noProfilePhoto from '/no-profile-photo.jpg';
+import { User } from '@/services/user';
 
 export default function InfoAccount(params: {
   name: string;
@@ -36,19 +37,18 @@ export default function InfoAccount(params: {
     setLoading(true);
     setShowModal(false);
 
-    const [error, data] = await Profile.updatePhoto(newFile, accessToken);
+    const [error, updatedData] = await Profile.updatePhoto(newFile, accessToken);
 
     const dataUrl = URL.createObjectURL(newFile);
 
-    console.log(data);
-
     if (!imgRef.current) return;
-    imgRef.current.src = dataUrl
 
+    imgRef.current.src = dataUrl
 
     if (error) {
       imgRef.current.src = noProfilePhoto
     }
+    if (updatedData) User.UserStorage.set(updatedData);
 
     setImageUrl('')
     setLoading(false)
