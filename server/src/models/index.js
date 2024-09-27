@@ -7,4 +7,4 @@ export { default as chatsModel } from './chats.js'
 export { default as messagesModel } from './messages.js'
 // export { default as contactsModel } from "./contacts.js";
 // export { default as rolePermsModel } from "./rolePerms.js";
-// export { default as groupMembersModel } from "./groupMembers.js";
+export { default as memberModel } from './members.js'
