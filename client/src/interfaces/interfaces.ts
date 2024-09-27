@@ -27,6 +27,7 @@ export interface User {
   name: string,
   username: string | null,
   avatarUrl: string | null
+  avatar: string | null
 }
 export interface UserResponse {
   success: boolean,

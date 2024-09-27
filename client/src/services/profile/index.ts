@@ -9,13 +9,12 @@
       try {
         const formData = new FormData();
         formData.append('avatar', file);
-        console.log({formData: Object.keys(formData)});
 
         const response = await fetch(ENV.PROFILE, {
           method: 'PUT',
           headers: {
             'Authorization': `Bearer ${accessToken}`,
-            'Content-Type': 'multipart/form-data'
+            // 'Content-Type': 'multipart/form-data'
           },
           body: formData
         })
