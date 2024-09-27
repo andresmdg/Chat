@@ -5,7 +5,7 @@
   type UpdateResponse = InferType<typeof updateResponseValidator>;
   export class Profile {
 
-    static async updatePhoto (file: File, accessToken: string): Promise<[Error | null, UpdateResponse | null]> {
+    static async updatePhoto (file: File, accessToken: string): Promise<[Error | null, UpdateResponse['data'] | null]> {
       try {
         const formData = new FormData();
         formData.append('avatar', file);
@@ -24,7 +24,7 @@
 
         if (!validateData.success) throw new Error(validateData.message);
 
-        return [null, validateData]
+        return [null, validateData.data]
       } catch (error) {
         if (error instanceof Error) return [error, null];
         return [new Error('Unknown Error'), null];
