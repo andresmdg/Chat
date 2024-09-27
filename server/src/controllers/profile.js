@@ -14,13 +14,9 @@ const myProfile = (req, done) => {
 const updateProfile = async (req, done) => {
   try {
     const { id } = req.user
-    const { name, email, password } = req.body
 
     const params = {}
-    if (name) params.name = name
-    if (email) params.email = email
-    if (password) params.password = bcrypt.hashSync(password, 10)
-
+    
     if (req.file) {
       params.avatar = `/uploads/avatars/${req.file.filename}`
     }
