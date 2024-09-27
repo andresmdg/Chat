@@ -1,6 +1,3 @@
-// Modules
-import bcrypt from 'bcryptjs'
-
 // Imports
 import { usersModel } from '#models'
 import { deleteFile } from '#utils'
@@ -16,7 +13,7 @@ const updateProfile = async (req, done) => {
     const { id } = req.user
 
     const params = {}
-    
+
     if (req.file) {
       params.avatar = `/uploads/avatars/${req.file.filename}`
     }
