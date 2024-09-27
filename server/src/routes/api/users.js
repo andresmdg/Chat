@@ -26,10 +26,6 @@ router.get('/username/:username', async (req, res) => {
   try {
     const { username } = req.params
 
-    if (username.startsWith('@')) {
-      username = username.substring(1)
-    }
-
     const user = await usersModel.getByUsername(username)
     if (user) {
       res.status(200).json({ success: true, user })
