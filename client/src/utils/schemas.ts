@@ -12,7 +12,6 @@ export const userResponseSchema = Yup.object({
     id: Yup.string().required(),
     name: Yup.string().required(),
     username: Yup.string().required().nullable(),
-    avatarUrl: Yup.string().required().nullable(),
     avatar: Yup.string().required().nullable()
   })
 })
@@ -29,7 +28,7 @@ export const updateResponseValidator = Yup.object({
     id: Yup.string().required(),
     name: Yup.string().required(),
     username: Yup.string().required().nullable(),
-    avatarUrl: Yup.string().required().nullable()
+    avatar: Yup.string().required().nullable()
   }),
   message: Yup.string().required()
 });
