@@ -18,7 +18,7 @@
     "dev": "NODE_ENV=development nodemon src/app.js",
     "start": "NODE_ENV=production node src/app.js",
     "init-db": "node src/utils/initdb.js",
-    "test": "jest",
+    "test": "NODE_ENV=test node --experimental-vm-modules ./node_modules/.bin/jest",
     "prettier": "prettier --write ."
   },
   "keywords": [],
@@ -41,6 +41,9 @@
     "uuid": "^10.0.0"
   },
   "devDependencies": {
+    "@babel/core": "^7.25.2",
+    "@babel/preset-env": "^7.25.4",
+    "babel-jest": "^29.7.0",
     "jest": "^29.7.0",
     "morgan": "^1.10.0",
     "nodemon": "^3.1.4",
