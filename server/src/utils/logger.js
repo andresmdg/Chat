@@ -53,9 +53,10 @@ class Logger extends Error {
 
   async writeLog(logMessage) {
     const logDir = path.join(__dirname, 'logs')
-    const logFilePath = path.join(logDir, 'logs.log')
+    const logFile = NODE_ENV === 'test' ? 'test.log' : 'logs.log'
+    const logFilePath = path.join(logDir, logFile)
 
-    if (NODE_ENV === 'development')
+    if (NODE_ENV === 'development' || NODE_ENV === 'test')
       console.log(`[${this.emisor.toUpperCase()}]  ${this.message}`)
 
     try {
@@ -84,11 +85,11 @@ class Logger extends Error {
 /* Ejemplo de uso 
 
  Registro de una acción
-const actionLogger = new Logger("Acción registrada", "INFO", "SR");
+const actionLogger = new Log("Acción registrada", "INFO", "SR");
 
  Lanzar un error
 try {
-  throw new Logger("Fallo en la conexión a la base de datos", "ERROR", "DB");
+  throw new Log("Fallo en la conexión a la base de datos", "ERROR", "DB");
 } catch (error) {
   console.error("Manejando el error:", error);
 }

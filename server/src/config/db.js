@@ -9,7 +9,7 @@ import { __dirname } from '#root'
 
 // Variables
 let db_instance = null
-const { DB_DIR } = process.env
+const { DB_DIR, DB_FIL } = process.env
 
 // db dir exists
 async function dirExists(dir) {
@@ -35,7 +35,7 @@ async function db() {
 
   const databaseDir =
     path.join(__dirname, DB_DIR) || path.join(__dirname, 'module')
-  const databaseFile = path.join(databaseDir, 'db.sqlite')
+  const databaseFile = path.join(databaseDir, DB_FIL)
 
   const databasePath = path.resolve(databaseFile)
 
@@ -49,7 +49,8 @@ async function db() {
         new Log(`Connection failed: ${error.message}`, 'error', 'module')
         reject(error)
       } else {
-        new Log('Successful connection.', 'info', 'module')
+        const src = path.relative(databaseDir, databasePath)
+        new Log(`Successful connection  |  [SOURCE]  ${src}`, 'info', 'module')
         db_instance = database
         resolve(db_instance)
       }

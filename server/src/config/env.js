@@ -10,8 +10,16 @@ import { __dirname } from '#root'
 
 new Log('Starting application...', 'info')
 
-const envFile =
-  process.env.NODE_ENV === 'development' ? '.env.development.local' : '.env'
+const envFile = (() => {
+  switch (process.env.NODE_ENV) {
+    case 'development':
+      return '.env.development.local'
+    case 'test':
+      return '.env.test.local'
+    default:
+      return '.env'
+  }
+})()
 
 new Log(`Loading env file  |  [SOURCE]  ${envFile}`, 'info')
 
