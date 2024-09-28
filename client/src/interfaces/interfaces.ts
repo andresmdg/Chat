@@ -26,7 +26,6 @@ export interface User {
   id: string,
   name: string,
   username: string | null,
-  avatarUrl: string | null
   avatar: string | null
 }
 export interface UserResponse {
